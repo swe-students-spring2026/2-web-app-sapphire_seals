@@ -1,0 +1,28 @@
+services:
+  app:
+    image: python:3.12
+    restart: always
+    volumes:
+      - type: bind
+        source: ./app/
+        target: /usr/src/app/
+    build:
+      context: ./app/
+    ports:
+      - 5000:5000
+    env_file:
+      - .env
+    networks:
+      - app
+
+  mongo:
+    image: mongo
+    restart: always
+    env_file:
+      - .env
+    networks:
+      - app
+
+networks:
+  app:
+    external: false
