@@ -16,4 +16,6 @@ See instructions. Delete this line and place instructions to download, configure
 
 ## Task boards
 
-See instructions. Delete this line and place a link to the task boards here.
+- Sprint 1 Status Board (GitHub Projects): [https://github.com/orgs/swe-students-spring2026/projects/22](https://github.com/orgs/swe-students-spring2026/projects/22)
+
+- Sprint 2 Status Board (Github Projects): TO BE ADDED
