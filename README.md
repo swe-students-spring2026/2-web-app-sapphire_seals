@@ -4,7 +4,7 @@ A little exercise to build a web application following an agile development proc
 
 ## Product vision statement
 
-See instructions. Delete this line and place the Product Vision Statement here.
+Create a mobile-friendly NYU dining guide where students can explore dining hall menus and rate food items to improve everyday meal choices for themselves and others. 
 
 ## User stories
 
