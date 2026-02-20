@@ -2,6 +2,14 @@
 
 A little exercise to build a web application following an agile development process. See the [instructions](instructions.md) for more detail.
 
+## Team members
+- [Prabhav Jalan](https://github.com/prabhavjalan)
+- [William Zhang](https://github.com/Incrediblez7)
+- [Frank Wu](https://github.com/HandEater)
+- [Jung Inoo](https://github.com/ij2298-oss)
+- HOWARD XIA - please add yours
+
+
 ## Product vision statement
 
 Create a mobile-friendly NYU dining guide where students can explore dining hall menus and rate food items to improve everyday meal choices for themselves and others. 
