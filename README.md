@@ -8,7 +8,8 @@ See instructions. Delete this line and place the Product Vision Statement here.
 
 ## User stories
 
-See instructions. Delete this line and place a link to the user stories here.
+## User Stories
+- GitHub Issues (User Stories): [https://github.com/swe-students-spring2026/2-web-app-sapphire_seals/issues](https://github.com/swe-students-spring2026/2-web-app-sapphire_seals/issues)
 
 ## Steps necessary to run the software
 
