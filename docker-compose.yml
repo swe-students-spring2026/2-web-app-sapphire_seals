@@ -1,6 +1,7 @@
 services:
   app:
     image: python:3.12
+    container_name: flask-app
     restart: always
     volumes:
       - type: bind
@@ -17,6 +18,7 @@ services:
 
   mongo:
     image: mongo:latest
+    container_name: mongodb
     restart: always
     env_file:
       - .env
