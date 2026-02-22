@@ -60,6 +60,23 @@ foods:
     sortOrder: int
     webtritionId: str | None
     foodEdges: [hallLocationId, periodId]
+    averageScore: float
+    ratings: rating[]
+        rating:
+            user_id: str (foreign key to users)
+            score: float
+            content: str
+            createdAt: datetime
+            updatedAt: datetime
+
+users:
+    _id = id: str (user id)
+    name: str
+    email: str
+    password: str
+    createdAt: datetime
+    updatedAt: datetime
+
 
 '''
 
@@ -112,6 +129,7 @@ def datadump():
             print(f"Getting foods for {category['name']}")
             for food in category["items"]:
                 food["foodEdges"] = [menu["locationId"], menu["id"]]
+                food["averageScore"] = 0
                 foods.append(food)
                 for filter in food["filters"]:
                     if filter["id"] not in tags_dedup:
