@@ -74,8 +74,7 @@ users:
     name: str
     email: str
     password: str
-    createdAt: datetime
-    updatedAt: datetime
+    netId: str
 
 
 '''

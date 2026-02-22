@@ -167,7 +167,7 @@ def get_user_account():
             return respond(400, "User ID is required")
         if db.users.find_one({"id": user_id}) is None:
             return respond(400, "User not found")
-        return respond(data=db.users.find_one({"id": user_id}))
+        return respond(data=db.users.find_one({"id": user_id}, {"_id": 0, "id": 1, "name": 1, "email": 1, "netId": 1}))
     except Exception as e:
         print(f"Encountered error in /users/account: {e}")
         return respond(500)
