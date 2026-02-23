@@ -15,6 +15,3 @@ import_collection "halls"
 import_collection "menus"
 import_collection "foods"
 import_collection "tags"
-
-#for user
-import_collection "users"
