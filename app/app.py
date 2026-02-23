@@ -50,7 +50,7 @@ def get_hall_details(hall_id):
         print(f"Encountered error in /halls/{hall_id}: {e}")
         return respond(500)
 
-@app.route("/foods/<food_item_id>", methods=["GET"])  # US03
+@app.route("/foods/<food_item_id>", methods=["GET"]) # US03, US13
 def get_food_item_details(food_item_id):
     try:
         food_item = db.foods.find_one({"id": food_item_id})
@@ -95,6 +95,85 @@ def get_tags():
         print(f"Encountered error in /config/tags: {e}")
         return respond(500)
 
+@app.route("/foods/<food_item_id>/rate", methods=["POST"]) # US09, US10, US11
+def rate_food_item(food_item_id):
+    try:
+        data = request.json
+        user_id = data.get("user_id")
+        score = data.get("score")
+        content = data.get("content")
+        if user_id is None or score is None or content is None:
+            return respond(400, "User ID, score, and content are required")
+        if db.users.find_one({"id": user_id}) is None:
+            return respond(400, "User not found")
+        if score != 0.0 and (score < 1 or score > 5):
+            return respond(400, "Score must be between 1 and 5")
+        if type(score) != float and score % 0.5 != 0:
+            return respond(400, "Score must be a float and a multiple of 0.5")
+        if type(content) != str:
+            return respond(400, "Content must be a string")
+        if len(content) > 1000:
+            return respond(400, "Content must be less than 1000 characters")
+        if score == 0.0: # DEL
+            db.foods.update_one({"id": food_item_id}, {"$pull": {"ratings": {"user_id": user_id}}})
+        else:
+            result = db.foods.update_one( # Try Update
+                {"id": food_item_id, "ratings.user_id": user_id},
+                {"$set": {
+                    "ratings.$.score": score,
+                    "ratings.$.content": content,
+                    "ratings.$.updatedAt": datetime.now()
+                }}
+            )
+            if result.matched_count == 0: # Not exist, append
+                db.foods.update_one(
+                    {"id": food_item_id},
+                    {"$push": {"ratings": {
+                        "user_id": user_id,
+                        "score": score,
+                        "content": content,
+                        "createdAt": datetime.now(),
+                        "updatedAt": datetime.now()
+                    }}}
+                )
+        ratings = db.foods.find_one({"id": food_item_id})["ratings"]
+        averageScore = 0 # Avoid div 0
+        if len(ratings) > 0:
+            averageScore = sum([rating["score"] for rating in ratings]) / len(ratings)
+        db.foods.update_one({"id": food_item_id}, {"$set": {"averageScore": averageScore}})
+        return respond(200)
+    except Exception as e:
+        print(f"Encountered error in /foods/{food_item_id}/rate: {e}")
+        return respond(500)
+
+@app.route("/users/all_ratings", methods=["GET"]) # US12
+def get_all_ratings():
+    try:
+        data = request.json
+        user_id = data.get("user_id")
+        if user_id is None:
+            return respond(400, "User ID is required")
+        if db.users.find_one({"id": user_id}) is None:
+            return respond(400, "User not found")
+        ratings = db.foods.find({"ratings.user_id": user_id})
+        return respond(data=ratings)
+    except Exception as e:
+        print(f"Encountered error in /users/all_ratings: {e}")
+        return respond(500)
+
+@app.route("/users/account", methods=["GET"])
+def get_user_account():
+    try:
+        data = request.json
+        user_id = data.get("user_id")
+        if user_id is None:
+            return respond(400, "User ID is required")
+        if db.users.find_one({"id": user_id}) is None:
+            return respond(400, "User not found")
+        return respond(data=db.users.find_one({"id": user_id}, {"_id": 0, "id": 1, "name": 1, "email": 1, "netId": 1}))
+    except Exception as e:
+        print(f"Encountered error in /users/account: {e}")
+        return respond(500)
 
 @app.route("/mongo/ping/")
 def mongo_ping():
