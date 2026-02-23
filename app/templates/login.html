@@ -1,28 +1,23 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <h2>Login</h2>
 {% if message %}
 <div class="error-message">{{ message }}</div>
 {% endif %}
 
 <form class="login-logout" form method="POST" action="login">
-    <div>
-        <label for="username">Username:</label>
-        <input type="text" name="username" value="">
-    </div>
-    <div>
-        <label for="password">Password:</label>
-        <input type="password" name="password" value="">
-    </div>
+  <div>
+    <label for="username">Username:</label>
+    <input type="text" name="username" value="" />
+  </div>
+  <div>
+    <label for="password">Password:</label>
+    <input type="password" name="password" value="" />
+  </div>
 
-    <div>
-        No account? <a href="{{url_for('register')}}"> Register!</a>
-    </div>
-    <div>
-        <input type="submit" value="Login">
-    </div>
+  <div>No account? <a href="{{url_for('auth.register')}}"> Register!</a></div>
+  <div>
+    <input type="submit" value="Login" />
+  </div>
 </form>
-
 
 {% endblock %}
