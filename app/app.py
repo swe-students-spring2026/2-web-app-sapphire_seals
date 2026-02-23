@@ -6,6 +6,8 @@ import config
 from db import db, client
 from auth import auth_bp
 
+import datetime
+
 app = Flask(__name__)
 
 app.secret_key = os.getenv("SECRET_KEY", "dev-only-change-me")
@@ -24,11 +26,7 @@ def respond(status_code=200, data=None):
             mimetype="application/json",
         ), status_code
 
-@app.route("/me", methods=["GET"])
-def me():
-    if session.get("user_id") is None:
-        return respond(401, "invalid credentials")
-    return respond(data={"username": session.get("username")})
+#### Public API ####
 
 @app.route("/halls/list", methods=["GET"])  # US01
 def get_halls():
@@ -95,17 +93,60 @@ def get_tags():
         print(f"Encountered error in /config/tags: {e}")
         return respond(500)
 
-@app.route("/foods/<food_item_id>/rate", methods=["POST"]) # US09, US10, US11
-def rate_food_item(food_item_id):
+@app.route("/users/all_ratings", methods=["GET"]) # US12
+def get_all_ratings():
     try:
         data = request.json
-        user_id = data.get("user_id")
+        user_id = data.get("user_id") # Authentication not required.
+        if user_id is None:
+            return respond(400, "User ID is required")
+        if db.users.find_one({"_id": user_id}) is None:
+            return respond(400, "User not found")
+        ratings = db.foods.find({"ratings.user_id": user_id})
+        return respond(data=ratings)
+    except Exception as e:
+        print(f"Encountered error in /users/all_ratings: {e}")
+        return respond(500)
+
+#### Authenticated API ####
+
+from functools import wraps
+
+def require_auth(view_fn):
+    @wraps(view_fn)
+    def wrapper(*args, **kwargs):
+        user_id = session.get("user_id")
+        if not user_id:
+            return respond(401, "invalid credentials")
+        if db.users.find_one({"_id": user_id}) is None:
+            return respond(404, "User not found")
+        kwargs["user_id"] = user_id
+        return view_fn(*args, **kwargs)
+    return wrapper
+
+@app.route("/me", methods=["GET"])
+@require_auth
+def me(user_id):
+    return respond(data=db.users.find_one({"_id": user_id}, {"_id": 0, "username": 1, "netid": 1, "email": 1}))
+
+@app.route("/users/account", methods=["GET"]) # Authenticated
+@require_auth
+def get_user_account(user_id):
+    try:
+        return respond(data=db.users.find_one({"_id": user_id}, {"_id": 0, "username": 1, "email": 1, "netid": 1}))
+    except Exception as e:
+        print(f"Encountered error in /users/account: {e}")
+        return respond(500)
+
+@app.route("/foods/<food_item_id>/rate", methods=["POST"]) # US09, US10, US11
+@require_auth
+def rate_food_item(food_item_id, user_id):
+    try:
+        data = request.json
         score = data.get("score")
         content = data.get("content")
-        if user_id is None or score is None or content is None:
-            return respond(400, "User ID, score, and content are required")
-        if db.users.find_one({"id": user_id}) is None:
-            return respond(400, "User not found")
+        if score is None or content is None:
+            return respond(400, "Score and content are required")
         if score != 0.0 and (score < 1 or score > 5):
             return respond(400, "Score must be between 1 and 5")
         if type(score) != float and score % 0.5 != 0:
@@ -115,7 +156,9 @@ def rate_food_item(food_item_id):
         if len(content) > 1000:
             return respond(400, "Content must be less than 1000 characters")
         if score == 0.0: # DEL
-            db.foods.update_one({"id": food_item_id}, {"$pull": {"ratings": {"user_id": user_id}}})
+            result = db.foods.update_one({"id": food_item_id}, {"$pull": {"ratings": {"user_id": user_id}}})
+            if result.matched_count == 0:
+                return respond(404, "You haven't rated this food item yet")
         else:
             result = db.foods.update_one( # Try Update
                 {"id": food_item_id, "ratings.user_id": user_id},
@@ -146,34 +189,7 @@ def rate_food_item(food_item_id):
         print(f"Encountered error in /foods/{food_item_id}/rate: {e}")
         return respond(500)
 
-@app.route("/users/all_ratings", methods=["GET"]) # US12
-def get_all_ratings():
-    try:
-        data = request.json
-        user_id = data.get("user_id")
-        if user_id is None:
-            return respond(400, "User ID is required")
-        if db.users.find_one({"id": user_id}) is None:
-            return respond(400, "User not found")
-        ratings = db.foods.find({"ratings.user_id": user_id})
-        return respond(data=ratings)
-    except Exception as e:
-        print(f"Encountered error in /users/all_ratings: {e}")
-        return respond(500)
-
-@app.route("/users/account", methods=["GET"])
-def get_user_account():
-    try:
-        data = request.json
-        user_id = data.get("user_id")
-        if user_id is None:
-            return respond(400, "User ID is required")
-        if db.users.find_one({"id": user_id}) is None:
-            return respond(400, "User not found")
-        return respond(data=db.users.find_one({"id": user_id}, {"_id": 0, "id": 1, "name": 1, "email": 1, "netId": 1}))
-    except Exception as e:
-        print(f"Encountered error in /users/account: {e}")
-        return respond(500)
+#### Status ####
 
 @app.route("/mongo/ping/")
 def mongo_ping():
