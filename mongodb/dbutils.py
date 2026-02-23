@@ -64,9 +64,10 @@ foods:
 
 users:
     _id = id: str (24 hex user identification string)
-    name: str
+    username: str
     email: str
-    netId: str
+    netid: str
+    password_hash: str
     createdAt: datetime
     updatedAt: datetime
 
