@@ -1,36 +1,29 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="col-md-5 col-lg-4">
-        <div class="card login-card p-4">
-            <div class="card-body">
-                <h2 class="text-center mb-4 text-primary">Login </h2>
+{% if message %}
+<div class="error-message">{{ message }}</div>
+{% endif %}
 
-                <form>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="email" placeholder="netid@nyu.edu" required>
-                    </div>
+<h2>Login</h2>
 
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" placeholder="Enter your password"
-                            required>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Login</button>
-                </form>
-
-                <hr class="my-4">
-
-                <div class="text-center">
-                    <p class="mb-0">No account? <a href="{{ url_for('registration') }}" class="text-decoration-none">
-                            Register</a></p>
-                </div>
-            </div>
-        </div>
+<form class="login-logout" form method="POST" action="login">
+    <div>
+        <label for="username">Username:</label>
+        <input type="text" name="username" value="">
     </div>
-</div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" name="password" value="">
+    </div>
+
+    <div>
+        No account? <a href="{{url_for('register')}}"> Register!</a>
+    </div>
+    <div>
+        <input type="submit" value="Login">
+    </div>
+</form>
+
 
 {% endblock %}

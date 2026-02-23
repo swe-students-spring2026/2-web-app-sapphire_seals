@@ -109,14 +109,19 @@ def mongo_ping():
         return f"MongoDB is not working: {e}"
 
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("login.html", title="Login", show_header=False)
+    if request.method == "POST":
+        return render_template(
+            "login.html", title="Login", show_header=False, message="Message"
+        )
+    else:
+        return render_template("login.html", title="Login", show_header=False)
 
 
-@app.route("/registration")
-def registration():
-    return render_template("registration.html", title="registration", show_header=False)
+@app.route("/register")
+def register():
+    return render_template("register.html", title="Register", show_header=False)
 
 
 if __name__ == "__main__":
