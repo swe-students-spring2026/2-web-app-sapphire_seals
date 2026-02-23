@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 import requests
 import json
+from werkzeug.security import generate_password_hash
 
 ''' 
 DB STRUCTURE:
@@ -60,6 +61,14 @@ foods:
     sortOrder: int
     webtritionId: str | None
     foodEdges: [hallLocationId, periodId]
+
+users:
+    _id = id: str (24 hex user identification string)
+    name: str
+    email: str
+    netId: str
+    createdAt: datetime
+    updatedAt: datetime
 
 '''
 

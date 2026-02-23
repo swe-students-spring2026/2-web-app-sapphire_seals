@@ -1,37 +1,58 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <h2>Register</h2>
 {% if message %}
 <div class="error-message">{{ message }}</div>
 {% endif %}
 
 <form class="login-logout" method="POST" action="register">
-    <div>
-        <label for="username">Username:</label>
-        <input type="text" name="username" value="" placeholder="Enter your username">
-    </div>
-    <div>
-        <label for="netid">NYU Net-ID:</label>
-        <input type="text" name="netid" value="" placeholder="Enter your NYU Net-ID">
-    </div>
-    <div>
-        <label for="email">NYU Email:</label>
-        <input type="email" name="email" value="" placeholder="Enter your NYU email">
-    </div>
-    <div>
-        <label for="password">Password:</label>
-        <input type="password" name="password" value="" placeholder="Enter your password">
-    </div>
+  <div>
+    <label for="username">Username:</label>
+    <input
+      type="text"
+      name="username"
+      value=""
+      placeholder="Enter your username"
+    />
+  </div>
+  <div>
+    <label for="netid">NYU Net-ID:</label>
+    <input
+      type="text"
+      name="netid"
+      value=""
+      placeholder="Enter your NYU Net-ID"
+    />
+  </div>
+  <div>
+    <label for="email">NYU Email:</label>
+    <input
+      type="email"
+      name="email"
+      value=""
+      placeholder="Enter your NYU email"
+    />
+  </div>
+  <div>
+    <label for="password">Password:</label>
+    <input
+      type="password"
+      name="password"
+      value=""
+      placeholder="Enter your password"
+    />
+  </div>
 
-    <div>
-        <label for="re-enter-password">Re-enter Password:</label>
-        <input type="password" name="re-enter-password" value="" placeholder="Enter your password">
-    </div>
+  <div>
+    <label for="re-enter-password">Re-enter Password:</label>
+    <input
+      type="password"
+      name="re-enter-password"
+      value=""
+      placeholder="Enter your password"
+    />
+  </div>
 
-    <div>
-        Already registered? <a href=" {{url_for('login')}}">Login</a>
-    </div>
-    <div><input type="submit" value="Register"></div>
+  <div>Already registered? <a href=" {{url_for('auth.login')}}">Login</a></div>
+  <div><input type="submit" value="Register" /></div>
 </form>
 {% endblock %}

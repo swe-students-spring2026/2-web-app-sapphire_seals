@@ -1,12 +1,16 @@
-from config import FLASK_HOST, FLASK_PORT
-from db import client, db
-
-from flask import Flask, render_template
-from flask import request, Response
+import os
+from flask import Flask, session, request, Response
 from bson.json_util import dumps
+
+import config
+from db import db, client
+from auth import auth_bp
 
 app = Flask(__name__)
 
+app.secret_key = os.getenv("SECRET_KEY", "dev-only-change-me")
+
+app.register_blueprint(auth_bp)
 
 def respond(status_code=200, data=None):
     if status_code == 200:
@@ -20,6 +24,11 @@ def respond(status_code=200, data=None):
             mimetype="application/json",
         ), status_code
 
+@app.route("/me", methods=["GET"])
+def me():
+    if session.get("user_id") is None:
+        return respond(401, "invalid credentials")
+    return respond(data={"username": session.get("username")})
 
 @app.route("/halls/list", methods=["GET"])  # US01
 def get_halls():
@@ -29,7 +38,6 @@ def get_halls():
     except Exception as e:
         print(f"Encountered error in /halls/list: {e}")
         return respond(500)
-
 
 @app.route("/halls/<hall_id>", methods=["GET"])  # US02
 def get_hall_details(hall_id):
@@ -41,7 +49,6 @@ def get_hall_details(hall_id):
     except Exception as e:
         print(f"Encountered error in /halls/{hall_id}: {e}")
         return respond(500)
-
 
 @app.route("/foods/<food_item_id>", methods=["GET"])  # US03
 def get_food_item_details(food_item_id):
@@ -57,18 +64,9 @@ def get_food_item_details(food_item_id):
 
 @app.route("/foods/search", methods=["POST"])  # US04, US05, US06
 def search_food_items():
-    """
-    POST /foods/search
-    data: {
-        "name": str,
-        "hall_id": str,
-        "tags": [tag_id, tag_id, ...]
-    }
-    """
     try:
         data = request.json
         foods = None
-        print(f"Data: {data}")
         if data.get("name", None) is not None:
             foods = db.foods.find(
                 {"name": {"$regex": data.get("name", None), "$options": "i"}}
@@ -79,12 +77,12 @@ def search_food_items():
             foods = db.foods.find({"filters.id": {"$in": data.get("tags", None)}})
         else:
             return respond(400, "No search criteria provided")
+        
         if foods is None:
             return respond(404, "No foods found")
         return respond(data=foods)
     except Exception as e:
         print(f"Encountered error in /foods/search: {e}")
-        print(f"Data: {request.json}")
         return respond(500)
 
 
@@ -107,27 +105,9 @@ def mongo_ping():
         return f"MongoDB is not working: {e}"
 
 
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        return render_template(
-            "login.html", title="Login", show_header=False, message="Error Message"
-        )
-    else:
-        return render_template("login.html", title="Login", show_header=False)
-
-
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    if request.method == "POST":
-        return render_template(
-            "register.html",
-            title="Register",
-            show_header=False,
-            message="Error Message",
-        )
-    else:
-        return render_template("register.html", title="Register", show_header=False)
-
-if __name__ == "__main__":
-    app.run(debug=True, host=FLASK_HOST, port=FLASK_PORT)
+if __name__ == '__main__':
+    app.run(
+        debug=True,
+        host=config.FLASK_HOST or "0.0.0.0",
+        port=int(config.FLASK_PORT or 5000)
+    )
