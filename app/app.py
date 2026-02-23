@@ -1,11 +1,9 @@
-from flask import Flask, render_template
-from pymongo import MongoClient
-from dotenv import load_dotenv, dotenv_values
-from flask import jsonify, request, Response
-from bson.json_util import dumps
-import os
+from config import FLASK_HOST, FLASK_PORT
+from db import client, db
 
-load_dotenv()
+from flask import Flask, render_template
+from flask import request, Response
+from bson.json_util import dumps
 
 app = Flask(__name__)
 
@@ -131,10 +129,5 @@ def register():
     else:
         return render_template("register.html", title="Register", show_header=False)
 
-
 if __name__ == "__main__":
-    client = MongoClient(os.getenv("MONGO_URL"))
-    db = client.get_database(os.getenv("MONGO_DBNAME"))
-    app.run(
-        debug=True, host=os.getenv("FLASK_HOST"), port=os.getenv("FLASK_PORT", 5000)
-    )
+    app.run(debug=True, host=FLASK_HOST, port=FLASK_PORT)
