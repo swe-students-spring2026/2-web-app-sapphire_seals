@@ -7,7 +7,7 @@ A little exercise to build a web application following an agile development proc
 - [William Zhang](https://github.com/Incrediblez7)
 - [Frank Wu](https://github.com/HandEater)
 - [Jung Inoo](https://github.com/ij2298-oss)
-- HOWARD XIA - please add yours
+- [Howard Xia](https://github.com/hewlett-packard-lovecraft)
 
 
 ## Product vision statement

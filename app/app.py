@@ -1,13 +1,12 @@
-from flask import Flask
-from pymongo import MongoClient
-from dotenv import load_dotenv, dotenv_values
-from flask import jsonify, request, Response
-from bson.json_util import dumps
-import os
+from config import FLASK_HOST, FLASK_PORT
+from db import client, db
 
-load_dotenv()
+from flask import Flask, render_template
+from flask import request, Response
+from bson.json_util import dumps
 
 app = Flask(__name__)
+
 
 def respond(status_code=200, data=None):
     if status_code == 200:
@@ -21,7 +20,8 @@ def respond(status_code=200, data=None):
             mimetype="application/json",
         ), status_code
 
-@app.route("/halls/list", methods=["GET"]) # US01
+
+@app.route("/halls/list", methods=["GET"])  # US01
 def get_halls():
     try:
         halls = db.halls.find({}, {"_id": 0, "id": 1, "name": 1})
@@ -30,7 +30,8 @@ def get_halls():
         print(f"Encountered error in /halls/list: {e}")
         return respond(500)
 
-@app.route("/halls/<hall_id>", methods=["GET"]) # US02
+
+@app.route("/halls/<hall_id>", methods=["GET"])  # US02
 def get_hall_details(hall_id):
     try:
         hall = db.halls.find_one({"id": hall_id})
@@ -41,7 +42,8 @@ def get_hall_details(hall_id):
         print(f"Encountered error in /halls/{hall_id}: {e}")
         return respond(500)
 
-@app.route("/foods/<food_item_id>", methods=["GET"]) # US03
+
+@app.route("/foods/<food_item_id>", methods=["GET"])  # US03
 def get_food_item_details(food_item_id):
     try:
         food_item = db.foods.find_one({"id": food_item_id})
@@ -52,22 +54,25 @@ def get_food_item_details(food_item_id):
         print(f"Encountered error in /foods/{food_item_id}: {e}")
         return respond(500)
 
-@app.route("/foods/search", methods=["POST"]) # US04, US05, US06
+
+@app.route("/foods/search", methods=["POST"])  # US04, US05, US06
 def search_food_items():
-    '''
+    """
     POST /foods/search
     data: {
         "name": str,
         "hall_id": str,
         "tags": [tag_id, tag_id, ...]
     }
-    '''
+    """
     try:
         data = request.json
         foods = None
         print(f"Data: {data}")
         if data.get("name", None) is not None:
-            foods = db.foods.find({"name": {"$regex": data.get("name", None), "$options": "i"}})
+            foods = db.foods.find(
+                {"name": {"$regex": data.get("name", None), "$options": "i"}}
+            )
         elif data.get("hall_id", None) is not None:
             foods = db.foods.find({"foodEdges.0": data.get("hall_id", None)})
         elif data.get("tags", None) is not None:
@@ -82,7 +87,8 @@ def search_food_items():
         print(f"Data: {request.json}")
         return respond(500)
 
-@app.route("/config/tags", methods=["GET"]) # Dependencies of US06
+
+@app.route("/config/tags", methods=["GET"])  # Dependencies of US06
 def get_tags():
     try:
         tags = db.tags.find({})
@@ -90,6 +96,7 @@ def get_tags():
     except Exception as e:
         print(f"Encountered error in /config/tags: {e}")
         return respond(500)
+
 
 @app.route("/mongo/ping/")
 def mongo_ping():
@@ -99,11 +106,28 @@ def mongo_ping():
     except Exception as e:
         return f"MongoDB is not working: {e}"
 
-if __name__ == '__main__':
-    client = MongoClient(os.getenv("MONGO_URL"))
-    db = client.get_database(os.getenv("MONGO_DBNAME"))
-    app.run(
-        debug=True,
-        host=os.getenv("FLASK_HOST"),
-        port=os.getenv("FLASK_PORT", 5000)
-    )
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        return render_template(
+            "login.html", title="Login", show_header=False, message="Error Message"
+        )
+    else:
+        return render_template("login.html", title="Login", show_header=False)
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        return render_template(
+            "register.html",
+            title="Register",
+            show_header=False,
+            message="Error Message",
+        )
+    else:
+        return render_template("register.html", title="Register", show_header=False)
+
+if __name__ == "__main__":
+    app.run(debug=True, host=FLASK_HOST, port=FLASK_PORT)
