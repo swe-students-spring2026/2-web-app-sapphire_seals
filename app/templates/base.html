@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{ title }} - RateMyCanteen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.png') }}">
+</head>
+
+<body>
+    {% if show_header %}
+    <header>
+        <h1> RateMyCanteen </h1>
+        <nav>
+            <a href="{{ url_for('login')}}">Login</a>
+        </nav>
+        <nav>
+            <a href="{{ url_for('registration')}}">Sign Up</a>
+        </nav>
+    </header>
+    {% endif %}
+
+
+    <div class="content">
+        <main>{% block content %} {% endblock %}</main>
+    </div>
+</body>
+
+</html>
