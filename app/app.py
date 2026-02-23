@@ -1,14 +1,16 @@
-from flask import Flask
-from pymongo import MongoClient
-from dotenv import load_dotenv, dotenv_values
-from flask import jsonify, request, Response
-from bson.json_util import dumps
 import os
-from datetime import datetime
+from flask import Flask, session, request, Response
+from bson.json_util import dumps
 
-load_dotenv()
+import config
+from db import db, client
+from auth import auth_bp
 
 app = Flask(__name__)
+
+app.secret_key = os.getenv("SECRET_KEY", "dev-only-change-me")
+
+app.register_blueprint(auth_bp)
 
 def respond(status_code=200, data=None):
     if status_code == 200:
@@ -22,7 +24,13 @@ def respond(status_code=200, data=None):
             mimetype="application/json",
         ), status_code
 
-@app.route("/halls/list", methods=["GET"]) # US01
+@app.route("/me", methods=["GET"])
+def me():
+    if session.get("user_id") is None:
+        return respond(401, "invalid credentials")
+    return respond(data={"username": session.get("username")})
+
+@app.route("/halls/list", methods=["GET"])  # US01
 def get_halls():
     try:
         halls = db.halls.find({}, {"_id": 0, "id": 1, "name": 1})
@@ -31,7 +39,7 @@ def get_halls():
         print(f"Encountered error in /halls/list: {e}")
         return respond(500)
 
-@app.route("/halls/<hall_id>", methods=["GET"]) # US02
+@app.route("/halls/<hall_id>", methods=["GET"])  # US02
 def get_hall_details(hall_id):
     try:
         hall = db.halls.find_one({"id": hall_id})
@@ -53,37 +61,32 @@ def get_food_item_details(food_item_id):
         print(f"Encountered error in /foods/{food_item_id}: {e}")
         return respond(500)
 
-@app.route("/foods/search", methods=["POST"]) # US04, US05, US06
+
+@app.route("/foods/search", methods=["POST"])  # US04, US05, US06
 def search_food_items():
-    '''
-    POST /foods/search
-    data: {
-        "name": str,
-        "hall_id": str,
-        "tags": [tag_id, tag_id, ...]
-    }
-    '''
     try:
         data = request.json
         foods = None
-        print(f"Data: {data}")
         if data.get("name", None) is not None:
-            foods = db.foods.find({"name": {"$regex": data.get("name", None), "$options": "i"}})
+            foods = db.foods.find(
+                {"name": {"$regex": data.get("name", None), "$options": "i"}}
+            )
         elif data.get("hall_id", None) is not None:
             foods = db.foods.find({"foodEdges.0": data.get("hall_id", None)})
         elif data.get("tags", None) is not None:
             foods = db.foods.find({"filters.id": {"$in": data.get("tags", None)}})
         else:
             return respond(400, "No search criteria provided")
+        
         if foods is None:
             return respond(404, "No foods found")
         return respond(data=foods)
     except Exception as e:
         print(f"Encountered error in /foods/search: {e}")
-        print(f"Data: {request.json}")
         return respond(500)
 
-@app.route("/config/tags", methods=["GET"]) # Dependencies of US06
+
+@app.route("/config/tags", methods=["GET"])  # Dependencies of US06
 def get_tags():
     try:
         tags = db.tags.find({})
@@ -180,11 +183,10 @@ def mongo_ping():
     except Exception as e:
         return f"MongoDB is not working: {e}"
 
+
 if __name__ == '__main__':
-    client = MongoClient(os.getenv("MONGO_URL"))
-    db = client.get_database(os.getenv("MONGO_DBNAME"))
     app.run(
         debug=True,
-        host=os.getenv("FLASK_HOST"),
-        port=os.getenv("FLASK_PORT", 5000)
+        host=config.FLASK_HOST or "0.0.0.0",
+        port=int(config.FLASK_PORT or 5000)
     )

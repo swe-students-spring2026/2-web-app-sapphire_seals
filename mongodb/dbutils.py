@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 import requests
 import json
+from werkzeug.security import generate_password_hash
 
 ''' 
 DB STRUCTURE:
@@ -76,6 +77,15 @@ users:
     password: str
     netId: str
 
+
+users:
+    _id = id: str (24 hex user identification string)
+    username: str
+    email: str
+    netid: str
+    password_hash: str
+    createdAt: datetime
+    updatedAt: datetime
 
 '''
 
