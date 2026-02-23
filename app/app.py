@@ -113,15 +113,23 @@ def mongo_ping():
 def login():
     if request.method == "POST":
         return render_template(
-            "login.html", title="Login", show_header=False, message="Message"
+            "login.html", title="Login", show_header=False, message="Error Message"
         )
     else:
         return render_template("login.html", title="Login", show_header=False)
 
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    return render_template("register.html", title="Register", show_header=False)
+    if request.method == "POST":
+        return render_template(
+            "register.html",
+            title="Register",
+            show_header=False,
+            message="Error Message",
+        )
+    else:
+        return render_template("register.html", title="Register", show_header=False)
 
 
 if __name__ == "__main__":
