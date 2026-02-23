@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, session
+from werkzeug.security import generate_password_hash, check_password_hash
 from pymongo import MongoClient
 from dotenv import load_dotenv, dotenv_values
 from flask import jsonify, request, Response
@@ -8,6 +9,69 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
+
+app.secret_key = os.getenv("SECRET_KEY", "dev-only-change-me")
+
+client = MongoClient(os.getenv("MONGO_URL"))
+db = client.get_database(os.getenv("MONGO_DBNAME"))
+
+
+@app.route("/register", methods=["POST"])
+def register():
+    try:
+        body = request.json or {}
+        username = (body.get("username") or "").strip()
+        password = body.get("password") or ""    
+
+        if not username or not password:
+            return respond(400, "username and password required")
+        user = db.users.find_one({"username": username})
+        if not user is None:
+            return respond(400, "existed user")
+        hashed_pwd =   
+
+@app.route("/login", methods=['POST'])
+def login():
+    """
+    POST /login
+    JSON:{"username": "...", "password": "..."}
+    """
+    try:
+        body = request.json or {}
+        username = (body.get("username") or "").strip()
+        password = body.get("password") or ""
+
+        if not username or not password:
+            return respond(400, "username and password required")
+        user = db.users.find_one({"username": username})
+        if user is None:
+            return respond(401, "invalid credentials")
+        if not check_password_hash(user.get("password_hash", ""),password):
+            return respond(401, "invalid credentials")
+        
+        session["user_id"] = str(user["_id"])
+        session["username"] = user["username"]
+        return respond(data = {"username": user["username"]})
+    except Exception as e:
+        print(f"Error in /login: {e}", flush=True)
+        return respond(500)
+    
+@app.route("/logout", methods=["POST"])
+def logout():
+    try:
+        session.clear()
+        return respond(data=True)
+    except Exception as e:
+        print(f"Error in /logout: {e}")
+        return respond(500)
+    
+@app.route("/me", methods=["GET"])
+def me():
+    if session.get("user_id") is None:
+        return respond(401, "invalid credentials")
+    return respond(data={"username": session.get("username")})
+
+
 
 def respond(status_code=200, data=None):
     if status_code == 200:

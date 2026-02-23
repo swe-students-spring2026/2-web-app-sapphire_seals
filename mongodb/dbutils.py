@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 import requests
 import json
+from werkzeug.security import generate_password_hash
 
 ''' 
 DB STRUCTURE:
@@ -121,6 +122,18 @@ def datadump():
     open("foods.json", "w").write(json.dumps(foods))
     open("tags.json", "w").write(json.dumps(tags))
 
+def dump_test_users():
+    users = [
+        {
+            "username": "test",
+            "password_hash": generate_password_hash("123456")
+        }
+    ]
+    with open("users.json", "w") as f:
+        json.dunp(users, f, indent=4)
+    print("Users dumped")
+
 if __name__ == "__main__":
     # This is gonna take a while...
     datadump()
+    dump_test_users()
