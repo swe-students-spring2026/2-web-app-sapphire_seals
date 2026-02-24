@@ -83,7 +83,6 @@ def search_food_items():
         print(f"Encountered error in /foods/search: {e}")
         return respond(500)
 
-
 @app.route("/config/tags", methods=["GET"])  # Dependencies of US06
 def get_tags():
     try:
@@ -101,7 +100,7 @@ def get_all_ratings():
         if user_id is None:
             return respond(400, "User ID is required")
         if db.users.find_one({"_id": user_id}) is None:
-            return respond(400, "User not found")
+            return respond(404, "User not found")
         ratings = db.foods.find({"ratings.user_id": user_id})
         return respond(data=ratings)
     except Exception as e:
@@ -157,7 +156,7 @@ def rate_food_item(food_item_id, user_id):
             return respond(400, "Content must be less than 1000 characters")
         if score == 0.0: # DEL
             result = db.foods.update_one({"id": food_item_id}, {"$pull": {"ratings": {"user_id": user_id}}})
-            if result.matched_count == 0:
+            if result.modified_count == 0:
                 return respond(404, "You haven't rated this food item yet")
         else:
             result = db.foods.update_one( # Try Update
@@ -165,7 +164,7 @@ def rate_food_item(food_item_id, user_id):
                 {"$set": {
                     "ratings.$.score": score,
                     "ratings.$.content": content,
-                    "ratings.$.updatedAt": datetime.now()
+                    "ratings.$.updatedAt": datetime.datetime.now()
                 }}
             )
             if result.matched_count == 0: # Not exist, append
@@ -175,8 +174,8 @@ def rate_food_item(food_item_id, user_id):
                         "user_id": user_id,
                         "score": score,
                         "content": content,
-                        "createdAt": datetime.now(),
-                        "updatedAt": datetime.now()
+                        "createdAt": datetime.datetime.now(),
+                        "updatedAt": datetime.datetime.now()
                     }}}
                 )
         ratings = db.foods.find_one({"id": food_item_id})["ratings"]
