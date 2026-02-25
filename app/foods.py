@@ -25,36 +25,36 @@ def hall_detail_page(hall_id):
     # Build meals list in the format hall_detail.html expects
     meals = []
     for food in foods:
-        # Get first filter name as the category
-        category = "Menu Item"
-        if food.get("filters") and len(food["filters"]) > 0:
-            category = food["filters"][0].get("name", "Menu Item")
-
         meals.append({
             "id": food.get("id"),
             "name": food.get("name", "Unknown"),
             "desc": food.get("desc", ""),
-            "category": category,
+            "category": food.get("category", ""),
             "calories": food.get("calories", ""),
             "averageScore": food.get("averageScore", 0),
         })
 
-    # Collect all reviews from foods in this hall
+    # Collect all reviews and filters from foods in this hall
     reviews = []
+    filters = []
     for food in foods:
         for r in food.get("ratings", []):
             reviews.append({
-                "user": r.get("user_id", "Anonymous"),
+                "user": r.get("username", "Anonymous"),
                 "text": r.get("content", ""),
                 "rating": int(r.get("score", 0)),
                 "food_name": food.get("name", ""),
             })
+        for f in food.get("filters", []):
+            if f not in filters:
+                filters.append(f)
 
     return render_template(
         "hall_detail.html",
         title=hall.get("name", "Dining Hall"),
         hall=hall,
         meals=meals,
+        filters=filters,
         reviews=reviews,
         show_header=False,
     )

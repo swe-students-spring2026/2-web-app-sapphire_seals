@@ -89,22 +89,16 @@
         {% endif %}
     </section>
 
-    <!-- Diet preference chips (built from actual food filter data) -->
-    {% set all_filters = [] %}
-    {% for m in meals %}
-        {% if m.category and m.category != "Menu Item" and m.category not in all_filters %}
-            {% if all_filters.append(m.category) %}{% endif %}
-        {% endif %}
-    {% endfor %}
+    <!-- Diet preference chips -->
 
-    {% if all_filters | length > 0 %}
+    {% if filters | length > 0 %}
     <section class="hd-section">
         <h2 class="hd-section-title">Dietary Options</h2>
         <div class="chip-grid">
-            {% for name in all_filters[:8] %}
+            {% for f in filters[:8] %}
             <div class="chip">
                 <span class="chip-ic">🍽</span>
-                <span>{{ name }}</span>
+                <span>{{ f.name }}</span>
             </div>
             {% endfor %}
         </div>
