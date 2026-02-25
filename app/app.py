@@ -1,6 +1,7 @@
 import os
 from flask import Flask, request, render_template
 from bson.json_util import dumps
+from bson.objectid import ObjectId
 
 import config
 from db import db, client
@@ -34,10 +35,11 @@ def home():
 @app.route("/account")
 @require_auth
 def account_page(user_id):
-    user = db.users.find_one({"_id": user_id}, {"_id": 0, "username": 1, "email": 1, "netid": 1, "password_hash": 0})
-    return render_template("account.html", title="Account", user=user, show_header=False)
-
-
+    user = db.users.find_one({"_id": ObjectId(user_id)}, {"_id": 0, "username": 1, "email": 1, "netid": 1})
+    if user is None:
+        return respond(404, "User not found")
+    return "NOT_IMPLEMENTED"
+    #return render_template("account.html", title="Account", user=user, show_header=False)
 
 #### Status ####
 

@@ -6,6 +6,7 @@ from utils import respond
 from utils import require_auth
 
 import datetime
+from bson.objectid import ObjectId
 
 api_bp = Blueprint('api', __name__, url_prefix='/api')
 
@@ -73,19 +74,15 @@ def get_tags():
         print(f"Encountered error in /config/tags: {e}")
         return respond(500)
 
-@api_bp.route("/users/all_ratings", methods=["GET"]) # US12
-def get_all_ratings():
+@api_bp.route("/users/<user_id>/all_ratings", methods=["GET"]) # US12
+def get_all_ratings(user_id):
     try:
-        data = request.json
-        user_id = data.get("user_id") # Authentication not required.
-        if user_id is None:
-            return respond(400, "User ID is required")
-        if db.users.find_one({"_id": user_id}) is None:
+        if db.users.find_one({"_id": ObjectId(user_id)}) is None:
             return respond(404, "User not found")
         ratings = db.foods.find({"ratings.user_id": user_id})
         return respond(data=ratings)
     except Exception as e:
-        print(f"Encountered error in /users/all_ratings: {e}")
+        print(f"Encountered error in /users/{user_id}/all_ratings: {e}")
         return respond(500)
 
 @api_bp.route("/foods/<food_item_id>/rate", methods=["POST"]) # US09, US10, US11
