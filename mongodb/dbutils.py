@@ -137,6 +137,7 @@ def datadump():
         for category in menu["categories"]:
             print(f"Getting foods for {category['name']}")
             for food in category["items"]:
+                food["_id"] = food["id"]
                 food["foodEdges"] = [menu["locationId"], menu["id"]]
                 food["averageScore"] = 0
                 foods.append(food)
