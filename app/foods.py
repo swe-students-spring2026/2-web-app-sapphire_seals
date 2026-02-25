@@ -1,48 +1,20 @@
 import os
-from flask import Flask, session, request, render_template, redirect
+from flask import Flask, session, request, render_template, redirect, Blueprint
 from functools import wraps
 
 import config
 from db import db, client
-from auth import auth_bp
+from utils import require_auth # Authentication helper
+from utils import respond # Response helper
 
 import datetime
 
-app = Flask(__name__)
 
-app.secret_key = os.getenv("SECRET_KEY", "dev-only-change-me")
-
-app.register_blueprint(auth_bp)
-
-
-#### Authentication Helper ####
-
-def require_auth(view_fn):
-    @wraps(view_fn)
-    def wrapper(*args, **kwargs):
-        user_id = session.get("user_id")
-        if not user_id:
-            return redirect("/login")
-        if db.users.find_one({"_id": user_id}) is None:
-            return redirect("/login")
-        kwargs["user_id"] = user_id
-        return view_fn(*args, **kwargs)
-    return wrapper
-
+foods_bp = Blueprint('foods', __name__)
 
 #### Page Routes ####
 
-@app.route("/")
-def home():
-    try:
-        halls = list(db.halls.find())
-        return render_template("home.html", title="Home", halls=halls, show_header=False)
-    except Exception as e:
-        print(f"Error on home page: {e}")
-        return render_template("home.html", title="Home", halls=[], show_header=False)
-
-
-@app.route("/halls/<hall_id>")
+@foods_bp.route("/halls/<hall_id>")
 def hall_detail_page(hall_id):
     try:
         hall = db.halls.find_one({"id": hall_id})
@@ -55,11 +27,11 @@ def hall_detail_page(hall_id):
         return "Something went wrong", 500
 
 
-@app.route("/meal/<food_item_id>")
+@foods_bp.route("/meal/<food_item_id>")
 def meal_detail_page(food_item_id):
     food = db.foods.find_one({"id": food_item_id})
     if food is None:
-        return "Food item not found", 404
+        return respond(404, "Food item not found")
 
     avg_score = food.get("averageScore", 0)
     message = request.args.get("message", None)
@@ -74,67 +46,51 @@ def meal_detail_page(food_item_id):
     )
 
 
-@app.route("/meal/<food_item_id>/review", methods=["GET", "POST"])
-def meal_review_page(food_item_id):
-    user_id = session.get("user_id")
-    if not user_id:
-        return redirect("/login")
-
-    food = db.foods.find_one({"id": food_item_id})
-    if food is None:
-        return "Food item not found", 404
-
-    # GET — show the form
-    if request.method == "GET":
+@foods_bp.route("/meal/<food_item_id>/review", methods=["GET", "POST", "DELETE"])
+@require_auth
+def meal_review_page(food_item_id, user_id):
+    def meal_review_template(message=None):
         return render_template(
             "meal_review.html",
             title="Meal Review",
             food=food,
-            message=None,
+            message=message,
             show_header=False,
         )
+    
+    food = db.foods.find_one({"id": food_item_id})
+    if food is None:
+        return meal_review_template(message="Food item not found!")
+
+    # GET — show the form
+    if request.method == "GET":
+        return meal_review_template()
+
+    # DELETE — delete the review
+    if request.method == "DELETE":
+        result = db.foods.update_one({"id": food_item_id}, {"$pull": {"ratings": {"user_id": user_id}}})
+        if result.modified_count == 0:
+            return meal_review_template(message="You haven't rated this food item yet!")
+        return redirect(f"/meal/{food_item_id}?message=Review+deleted+successfully!")
 
     # POST — process the review
     score_raw = request.form.get("score")
     content = request.form.get("content", "").strip()
 
     if score_raw is None:
-        return render_template(
-            "meal_review.html",
-            title="Meal Review",
-            food=food,
-            message="Please select a star rating.",
-            show_header=False,
-        )
+        return meal_review_template(message="Please select a star rating.")
 
-    score = float(score_raw)
+    try:
+        score = float(score_raw)
+    except ValueError:
+        return meal_review_template(message="Invalid star rating.")
 
     if score < 1 or score > 5:
-        return render_template(
-            "meal_review.html",
-            title="Meal Review",
-            food=food,
-            message="Rating must be between 1 and 5.",
-            show_header=False,
-        )
-
+        return meal_review_template(message="Rating must be between 1 and 5.")
     if not content:
-        return render_template(
-            "meal_review.html",
-            title="Meal Review",
-            food=food,
-            message="Please write a review.",
-            show_header=False,
-        )
-
+        return meal_review_template(message="Please write a review.")
     if len(content) > 1000:
-        return render_template(
-            "meal_review.html",
-            title="Meal Review",
-            food=food,
-            message="Review must be under 1000 characters.",
-            show_header=False,
-        )
+        return meal_review_template(message="Review must be under 1000 characters.")
 
     # Try to update existing rating by this user
     result = db.foods.update_one(
@@ -177,7 +133,7 @@ def meal_review_page(food_item_id):
     return redirect(f"/meal/{food_item_id}?message=Review+submitted+successfully!")
 
 
-@app.route("/search")
+@foods_bp.route("/search")
 def search_page():
     query = request.args.get("q", "").strip()
     results = []
@@ -188,29 +144,22 @@ def search_page():
     return render_template("search.html", title="Search", query=query, results=results, show_header=False)
 
 
-@app.route("/favorites")
+@foods_bp.route("/users/my_ratings", methods=["GET"])
 @require_auth
-def favorites_page(user_id):
-    rated_foods = list(db.foods.find({"ratings.user_id": user_id}))
-    return render_template("favorites.html", title="Favorites", foods=rated_foods, show_header=False)
+def my_ratings(user_id):
+    ratings = list(db.foods.find({"ratings.user_id": user_id}))
+    return render_template("my_ratings.html", title="My Ratings", ratings=ratings, show_header=False)
 
-
-@app.route("/account")
-@require_auth
-def account_page(user_id):
-    user = db.users.find_one({"_id": user_id}, {"password_hash": 0})
-    return render_template("account.html", title="Account", user=user, show_header=False)
-
-
-#### Status ####
-
-@app.route("/mongo/ping/")
-def mongo_ping():
-    try:
-        client.admin.command("ping")
-        return "MongoDB is working!"
-    except Exception as e:
-        return f"MongoDB is not working: {e}"
+@foods_bp.route("/users/all_ratings", methods=["POST"])
+def all_ratings(user_id):
+    data = request.json
+    user_id = data.get("user_id")
+    if user_id is None:
+        return respond(400, "User ID is required")
+    if db.users.find_one({"_id": user_id}) is None:
+        return respond(404, "User not found")
+    ratings = list(db.foods.find({"ratings.user_id": user_id}))
+    # todo: return ratings of a specific user
 
 
 if __name__ == '__main__':
