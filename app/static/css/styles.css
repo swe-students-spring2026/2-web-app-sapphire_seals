@@ -9,7 +9,6 @@ body {
 
 .error-message {
     background-color: #eecccc;
-    /* margin-bottom: 1em; */
     padding: 0.25em;
     margin-bottom: .5em;
     text-align: center;
@@ -120,6 +119,10 @@ body {
     border-top: 1px solid #e8e8e8;
     margin: 0 -1em;
     background: #fff;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 .nav-item {
@@ -138,6 +141,10 @@ body {
 
 .nav-item span {
     font-weight: 500;
+}
+
+.nav-item.active {
+    color: #1a1a1a;
 }
 
 /* ===== MEAL DETAILS PAGE ===== */
@@ -501,6 +508,363 @@ body {
     color: #fff;
 }
 
+/* ===== DINING HALLS SCREEN ===== */
+
+.dh-topbar {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    display: grid;
+    grid-template-columns: 44px 1fr 72px;
+    align-items: center;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(0,0,0,.06);
+    z-index: 10;
+}
+
+.dh-back {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    text-decoration: none;
+    font-size: 28px;
+    line-height: 1;
+    color: #111;
+    border-radius: 10px;
+}
+
+.dh-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: left;
+}
+
+.dh-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.dh-action {
+    font-size: 16px;
+}
+
+.dh-section {
+    padding: 14px 12px 90px;
+}
+
+.dh-section-title {
+    margin: 0 0 10px 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: #111;
+}
+
+.dh-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dh-row {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+    padding: 10px 8px;
+    border-radius: 12px;
+}
+
+.dh-left {
+    display: grid;
+    place-items: center;
+}
+
+.dh-star {
+    font-size: 16px;
+}
+
+.dh-mid {
+    min-width: 0;
+}
+
+.dh-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: #111;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dh-desc {
+    margin-top: 2px;
+    font-size: 10px;
+    color: rgba(0,0,0,.55);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dh-rating-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+    padding: 6px 10px;
+    border-radius: 14px;
+    background: #2b2b2b;
+}
+
+.dh-rating-star {
+    font-size: 12px;
+    color: rgba(255,255,255,.45);
+    line-height: 1;
+}
+
+.dh-rating-star.is-on {
+    color: #f5c542;
+}
+
+.dh-empty {
+    font-size: 12px;
+    color: rgba(0,0,0,.6);
+    padding: 12px 0;
+}
+
+/* ===== DINING HALL DETAIL ===== */
+
+.hall-detail {
+    padding: 0 12px 110px;
+}
+
+.hd-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: #fff;
+    display: grid;
+    grid-template-columns: 44px 1fr 72px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0,0,0,.06);
+}
+
+.hd-back {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    text-decoration: none;
+    font-size: 28px;
+    line-height: 1;
+    color: #111;
+    border-radius: 10px;
+}
+
+.hd-title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.hd-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.hd-action {
+    font-size: 16px;
+}
+
+.hd-card {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 12px;
+    border-radius: 14px;
+    background: #f6f6f6;
+}
+
+.hd-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    background: #ddd;
+}
+
+.hd-hall-name {
+    font-weight: 800;
+    font-size: 12px;
+    color: #111;
+}
+
+.hd-subtitle {
+    margin-top: 2px;
+    font-size: 10px;
+    color: rgba(0,0,0,.55);
+}
+
+.hd-section {
+    margin-top: 14px;
+}
+
+.hd-section-title {
+    margin: 0 0 8px 0;
+    font-size: 12px;
+    font-weight: 800;
+    color: #111;
+}
+
+.hd-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.meal-card {
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 12px;
+    padding: 10px;
+    background: #fff;
+}
+
+.meal-category {
+    font-size: 10px;
+    color: rgba(0,0,0,.55);
+    font-weight: 700;
+}
+
+.meal-photo {
+    margin: 8px 0;
+    height: 72px;
+    border-radius: 10px;
+    background: #efefef;
+    display: grid;
+    place-items: center;
+    font-size: 10px;
+    color: rgba(0,0,0,.45);
+}
+
+.meal-name {
+    font-size: 10px;
+    color: rgba(0,0,0,.55);
+    margin-top: 2px;
+}
+
+.meal-desc {
+    margin-top: 2px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #111;
+}
+
+.review-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.review-row {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    gap: 10px;
+    align-items: start;
+    padding: 10px;
+    border-radius: 12px;
+    background: #f6f6f6;
+}
+
+.review-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    background: #ddd;
+    margin-top: 2px;
+}
+
+.review-name {
+    font-size: 11px;
+    font-weight: 800;
+    color: #111;
+}
+
+.review-text {
+    margin-top: 2px;
+    font-size: 10px;
+    color: rgba(0,0,0,.55);
+}
+
+.review-stars {
+    display: inline-flex;
+    gap: 1px;
+    padding-top: 2px;
+}
+
+.star {
+    font-size: 12px;
+    color: rgba(255,180,0,.35);
+    line-height: 1;
+}
+
+.star.is-on {
+    color: #f5c542;
+}
+
+.chip-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.chip {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 10px;
+    border-radius: 12px;
+    background: #f6f6f6;
+    font-size: 11px;
+    font-weight: 700;
+    color: #111;
+}
+
+.chip-ic {
+    width: 26px;
+    height: 26px;
+    border-radius: 10px;
+    background: #fff;
+    display: grid;
+    place-items: center;
+}
+
+.hd-cta-wrap {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 10px 12px 18px;
+    background: linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,.92), rgba(255,255,255,0));
+}
+
+.hd-cta {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    background: #111;
+    padding: 14px 12px;
+    border-radius: 14px;
+    font-weight: 800;
+    font-size: 12px;
+}
+
 /* ===== HOME PAGE ===== */
 
 .home-banner {
@@ -546,6 +910,7 @@ body {
 
 .halls-list {
     margin-bottom: 24px;
+    padding-bottom: 90px;
 }
 
 .hall-card {
@@ -619,11 +984,6 @@ body {
     font-size: 20px;
 }
 
-/* Active state for bottom nav */
-.nav-item.active {
-    color: #1a1a1a;
-}
-
 /* ===== SEARCH PAGE ===== */
 
 .search-bar {
@@ -655,6 +1015,7 @@ body {
 
 .search-results-list {
     margin-bottom: 24px;
+    padding-bottom: 90px;
 }
 
 .search-result-card {
