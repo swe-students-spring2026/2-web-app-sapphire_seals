@@ -1,116 +1,120 @@
 {% extends "base.html" %}
-{# Hide the base header on this screen (we use a custom top bar). #}
 {% set show_header = False %}
 
 {% block content %}
 <div class="hall-detail">
 
-  {# Top bar #}
-  <header class="hd-topbar">
-    <a class="hd-back" href="{{ back_url if back_url is defined else '/halls' }}" aria-label="Back">‹</a>
-    <h1 class="hd-title">{{ hall.name if hall is defined and hall.name is defined else "Dining Hall Today" }}</h1>
-    <div class="hd-actions" aria-label="Actions">
-      <span class="hd-action" title="smile">🙂</span>
-      <span class="hd-action" title="settings">🎛️</span>
-    </div>
-  </header>
+    <!-- Top bar -->
+    <header class="hd-topbar">
+        <a class="hd-back" href="/halls" aria-label="Back">‹</a>
+        <h1 class="hd-title">{{ hall.name }}</h1>
+        <div class="hd-actions" aria-label="Actions">
+            <a href="/search" class="hd-action" style="text-decoration:none;">🔍</a>
+            <span class="hd-action" title="settings">🎛️</span>
+        </div>
+    </header>
 
-  {# Hall header card #}
-  <section class="hd-card">
-    <div class="hd-avatar" aria-hidden="true"></div>
-    <div class="hd-card-text">
-      <div class="hd-hall-name">{{ hall.name if hall is defined and hall.name is defined else "Dining Hall Delights" }}</div>
-      <div class="hd-subtitle">{{ hall.mobileOrderingLabel if hall is defined and hall.mobileOrderingLabel is defined and hall.mobileOrderingLabel else "Today's Menu Highlights" }}</div>
-    </div>
-  </section>
-
-  {# Today's Meal grid #}
-  <section class="hd-section">
-    <h2 class="hd-section-title">Today's Meal</h2>
-
-    <div class="hd-grid">
-      {# foods is sourced from MongoDB; each item has category, name, desc, ratings, etc. #}
-      {% if foods is defined and foods %}
-        {% for f in foods %}
-          <article class="meal-card">
-            <div class="meal-category">{{ f.category if f.category is defined else (f.get('category') if f is mapping else "Category") }}</div>
-            <div class="meal-photo" aria-hidden="true">[Food Photo]</div>
-            <div class="meal-name">{{ f.name if f.name is defined else (f.get('name') if f is mapping else "Food Name") }}</div>
-            <div class="meal-desc">[{{ f.desc if f.desc is defined else (f.get('desc') if f is mapping else "Food Description") }}]</div>
-          </article>
-        {% endfor %}
-      {% else %}
-        {# Fallback placeholders (keeps the design visible without backend data). #}
-        {% for _ in range(0, 4) %}
-          <article class="meal-card">
-            <div class="meal-category">[Category]</div>
-            <div class="meal-photo" aria-hidden="true">[Food Photo]</div>
-            <div class="meal-name">[Food Name]</div>
-            <div class="meal-desc">[Food Description]</div>
-          </article>
-        {% endfor %}
-      {% endif %}
-    </div>
-  </section>
-
-  {# Reviews list #}
-  <section class="hd-section">
-    <h2 class="hd-section-title">Reviews</h2>
-
-    <div class="review-list">
-      {% if reviews is defined and reviews %}
-        {% for r in reviews %}
-          {% set rating = (r.score if r.score is defined else (r.get('score') if r is mapping else 5))|int %}
-          <div class="review-row">
-            <div class="review-avatar" aria-hidden="true"></div>
-            <div class="review-body">
-              <div class="review-name">{{ r.username if r.username is defined else (r.get('username') if r is mapping else "User") }}</div>
-              <div class="review-text">[{{ (r.content if r.content is defined else (r.get('content') if r is mapping else "Review Description")) }}]</div>
+    <!-- Hall header card -->
+    <section class="hd-card">
+        <div class="hd-avatar" aria-hidden="true"></div>
+        <div class="hd-card-text">
+            <div class="hd-hall-name">{{ hall.name }}</div>
+            <div class="hd-subtitle">
+                {% if hall.get('greenRestaurant') %}🌿 Green Restaurant{% endif %}
+                {% if hall.get('mobileOrderingLabel') %} • {{ hall.mobileOrderingLabel }}{% endif %}
+                {% if not hall.get('greenRestaurant') and not hall.get('mobileOrderingLabel') %}NYU Dining{% endif %}
             </div>
-            <div class="review-stars" aria-label="Rating {{ rating }} out of 5">
-              {% for i in range(1, 6) %}
-                {% if i <= rating %}
-                  <span class="star is-on">★</span>
-                {% else %}
-                  <span class="star">★</span>
+        </div>
+    </section>
+
+    <!-- Today's Meals grid -->
+    <section class="hd-section">
+        <h2 class="hd-section-title">Menu Items ({{ meals | length }})</h2>
+
+        {% if meals and meals | length > 0 %}
+        <div class="hd-grid">
+            {% for m in meals %}
+            <a href="/meal/{{ m.id }}" class="meal-card" style="text-decoration:none; color:inherit;">
+                <div class="meal-category">{{ m.category }}</div>
+                <div class="meal-photo" aria-hidden="true">{{ m.calories }} cal</div>
+                <div class="meal-desc">{{ m.name }}</div>
+                <div class="meal-name">{{ m.desc }}</div>
+
+                {% if m.averageScore and m.averageScore > 0 %}
+                <div class="review-stars" style="margin-top:4px;">
+                    {% for i in range(1, 6) %}
+                        {% if i <= m.averageScore | round(0, 'floor') | int %}
+                            <span class="star is-on">★</span>
+                        {% else %}
+                            <span class="star">★</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
                 {% endif %}
-              {% endfor %}
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="dh-empty">No menu items found for this dining hall.</p>
+        {% endif %}
+    </section>
+
+    <!-- Reviews list -->
+    <section class="hd-section">
+        <h2 class="hd-section-title">Reviews</h2>
+
+        {% if reviews and reviews | length > 0 %}
+        <div class="review-list">
+            {% for r in reviews[:15] %}
+            <div class="review-row">
+                <div class="review-avatar" aria-hidden="true"></div>
+                <div class="review-body">
+                    <div class="review-name">{{ r.food_name }}</div>
+                    <div class="review-text">{{ r.text[:150] }}{% if r.text | length > 150 %}...{% endif %}</div>
+                </div>
+                <div class="review-stars" aria-label="Rating {{ r.rating }} out of 5">
+                    {% for i in range(1, 6) %}
+                        {% if i <= r.rating %}
+                            <span class="star is-on">★</span>
+                        {% else %}
+                            <span class="star">★</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
             </div>
-          </div>
-        {% endfor %}
-      {% else %}
-        {% for name in ["Alice", "Jake", "Max"] %}
-          <div class="review-row">
-            <div class="review-avatar" aria-hidden="true"></div>
-            <div class="review-body">
-              <div class="review-name">{{ name }}</div>
-              <div class="review-text">[Review Description]</div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="dh-empty">No reviews yet. Be the first to rate a meal!</p>
+        {% endif %}
+    </section>
+
+    <!-- Diet preference chips (built from actual food filter data) -->
+    {% set all_filters = [] %}
+    {% for m in meals %}
+        {% if m.category and m.category != "Menu Item" and m.category not in all_filters %}
+            {% if all_filters.append(m.category) %}{% endif %}
+        {% endif %}
+    {% endfor %}
+
+    {% if all_filters | length > 0 %}
+    <section class="hd-section">
+        <h2 class="hd-section-title">Dietary Options</h2>
+        <div class="chip-grid">
+            {% for name in all_filters[:8] %}
+            <div class="chip">
+                <span class="chip-ic">🍽</span>
+                <span>{{ name }}</span>
             </div>
-            <div class="review-stars" aria-label="Rating 5 out of 5">
-              {% for _ in range(0,5) %}<span class="star is-on">★</span>{% endfor %}
-            </div>
-          </div>
-        {% endfor %}
-      {% endif %}
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Sticky CTA -->
+    <div class="hd-cta-wrap">
+        <a class="hd-cta" href="/search">🔍 Search All Meals</a>
     </div>
-  </section>
-
-  {# Diet preference chips #}
-  <section class="hd-section">
-    <h2 class="hd-section-title">Diet Preferences</h2>
-
-    <div class="chip-grid">
-      <div class="chip"><span class="chip-ic">🥬</span><span>Vegan</span></div>
-      <div class="chip"><span class="chip-ic">🔎</span><span>Vegetarian</span></div>
-      <div class="chip"><span class="chip-ic">🍖</span><span>Meat Lovers</span></div>
-      <div class="chip"><span class="chip-ic">⏱️</span><span>Quick Meals</span></div>
-    </div>
-  </section>
-
-  {# Sticky action button area (keeps design like the mock). #}
-  <div class="hd-cta-wrap">
-    <a class="hd-cta" href="{{ direction_url if direction_url is defined else '#' }}">Get a Direction</a>
-  </div>
 
 </div>
 {% endblock %}
