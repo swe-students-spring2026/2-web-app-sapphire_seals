@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{# Hide the base header on this screen (we use a custom top bar). #}
+{% set show_header = False %}
+
+{% block content %}
+<div class="hall-detail">
+
+  {# Top bar #}
+  <header class="hd-topbar">
+    <a class="hd-back" href="{{ back_url if back_url is defined else '/halls' }}" aria-label="Back">‹</a>
+    <h1 class="hd-title">{{ hall.name if hall is defined and hall.name is defined else "Dining Hall Today" }}</h1>
+    <div class="hd-actions" aria-label="Actions">
+      <span class="hd-action" title="smile">🙂</span>
+      <span class="hd-action" title="settings">🎛️</span>
+    </div>
+  </header>
+
+  {# Hall header card #}
+  <section class="hd-card">
+    <div class="hd-avatar" aria-hidden="true"></div>
+    <div class="hd-card-text">
+      <div class="hd-hall-name">{{ hall.name if hall is defined and hall.name is defined else "Dining Hall Delights" }}</div>
+      <div class="hd-subtitle">{{ hall.tagline if hall is defined and hall.tagline is defined else "Today's Menu Highlights" }}</div>
+    </div>
+  </section>
+
+  {# Today's Meal grid #}
+  <section class="hd-section">
+    <h2 class="hd-section-title">Today's Meal</h2>
+
+    <div class="hd-grid">
+      {# Expected: meals is a list of dicts/objects with category, name, desc. #}
+      {% if meals is defined and meals %}
+        {% for m in meals %}
+          <article class="meal-card">
+            <div class="meal-category">{{ m.category if m.category is defined else (m.get('category') if m is mapping else "Category") }}</div>
+            <div class="meal-photo" aria-hidden="true">[Food Photo]</div>
+            <div class="meal-name">{{ m.name if m.name is defined else (m.get('name') if m is mapping else "Food Name") }}</div>
+            <div class="meal-desc">[{{ m.desc if m.desc is defined else (m.get('desc') if m is mapping else "Food Description") }}]</div>
+          </article>
+        {% endfor %}
+      {% else %}
+        {# Fallback placeholders (keeps the design visible without backend data). #}
+        {% for _ in range(0, 4) %}
+          <article class="meal-card">
+            <div class="meal-category">[Category]</div>
+            <div class="meal-photo" aria-hidden="true">[Food Photo]</div>
+            <div class="meal-name">[Food Name]</div>
+            <div class="meal-desc">[Food Description]</div>
+          </article>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </section>
+
+  {# Reviews list #}
+  <section class="hd-section">
+    <h2 class="hd-section-title">Reviews</h2>
+
+    <div class="review-list">
+      {% if reviews is defined and reviews %}
+        {% for r in reviews %}
+          {% set rating = (r.rating if r.rating is defined else (r.get('rating') if r is mapping else 5))|int %}
+          <div class="review-row">
+            <div class="review-avatar" aria-hidden="true"></div>
+            <div class="review-body">
+              <div class="review-name">{{ r.user if r.user is defined else (r.get('user') if r is mapping else "User") }}</div>
+              <div class="review-text">[{{ r.text if r.text is defined else (r.get('text') if r is mapping else "Review Description") }}]</div>
+            </div>
+            <div class="review-stars" aria-label="Rating {{ rating }} out of 5">
+              {% for i in range(1, 6) %}
+                {% if i <= rating %}
+                  <span class="star is-on">★</span>
+                {% else %}
+                  <span class="star">★</span>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        {% for name in ["Alice", "Jake", "Max"] %}
+          <div class="review-row">
+            <div class="review-avatar" aria-hidden="true"></div>
+            <div class="review-body">
+              <div class="review-name">{{ name }}</div>
+              <div class="review-text">[Review Description]</div>
+            </div>
+            <div class="review-stars" aria-label="Rating 5 out of 5">
+              {% for _ in range(0,5) %}<span class="star is-on">★</span>{% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </section>
+
+  {# Diet preference chips #}
+  <section class="hd-section">
+    <h2 class="hd-section-title">Diet Preferences</h2>
+
+    <div class="chip-grid">
+      <div class="chip"><span class="chip-ic">🥬</span><span>Vegan</span></div>
+      <div class="chip"><span class="chip-ic">🔎</span><span>Vegetarian</span></div>
+      <div class="chip"><span class="chip-ic">🍖</span><span>Meat Lovers</span></div>
+      <div class="chip"><span class="chip-ic">⏱️</span><span>Quick Meals</span></div>
+    </div>
+  </section>
+
+  {# Sticky action button area (keeps design like the mock). #}
+  <div class="hd-cta-wrap">
+    <a class="hd-cta" href="{{ direction_url if direction_url is defined else '#' }}">Get a Direction</a>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+{% set show_header = False %}
+<header class="dh-topbar">
+  <a class="dh-back" href="{{ back_url if back_url is defined else '/' }}" aria-label="Back">‹</a>
+  <h1 class="dh-title">Dining Halls</h1>
+
+</header>
+
+<section class="dh-section">
+  <h2 class="dh-section-title">Available Dining Halls</h2>
+
+  {% if halls and halls|length > 0 %}
+    <div class="dh-list">
+      {% for hall in halls %}
+        {# Expected fields: hall.name, hall.desc (optional), hall.avg_rating (0..5) #}
+        {% set name = hall.name if hall.name is defined else (hall.get('name') if hall is mapping else 'Dining Hall') %}
+        {% set desc = (hall.desc if hall.desc is defined else (hall.get('desc') if hall is mapping else None)) %}
+        {% set rating = (hall.avg_rating if hall.avg_rating is defined else (hall.get('avg_rating') if hall is mapping else 0)) %}
+        {% set rating_int = rating|int %}
+
+        {# Link to a detail page if an id exists; otherwise keep it harmless #}
+        <a class="dh-row" href="{{ hall.url if hall.url is defined else ('/halls/' ~ (hall._id if hall._id is defined else (hall.get('_id') if hall is mapping else ''))) }}">
+          <div class="dh-left">
+            <span class="dh-star" aria-hidden="true">⭐</span>
+          </div>
+
+          <div class="dh-mid">
+            <div class="dh-name">[{{ name }}]</div>
+            <div class="dh-desc">{{ desc if desc else "Simple Dining Hall Instruction" }}</div>
+          </div>
+
+          <div class="dh-right">
+            <span class="dh-rating-pill" aria-label="Rating {{ rating_int }} out of 5">
+              {# Always render 5 stars; fill up to rating_int #}
+              {% for i in range(1, 6) %}
+                {% if i <= rating_int %}
+                  <span class="dh-rating-star is-on">★</span>
+                {% else %}
+                  <span class="dh-rating-star">★</span>
+                {% endif %}
+              {% endfor %}
+            </span>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="dh-empty">No dining halls found.</p>
+  {% endif %}
+</section>
+{# Bottom navigation (page-specific). Uses existing .bottom-nav CSS. #}
+<nav class="bottom-nav" aria-label="Bottom navigation">
+  <a class="nav-item" href="/">
+    <span class="nav-icon">🏠</span>
+    <span>Home</span>
+  </a>
+
+  <a class="nav-item" href="/favorites">
+    <span class="nav-icon">❤️</span>
+    <span>Favorites</span>
+  </a>
+
+  <a class="nav-item" href="/search">
+    <span class="nav-icon">🔍</span>
+    <span>Search</span>
+  </a>
+</nav>
+{% endblock %}

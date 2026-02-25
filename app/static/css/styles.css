@@ -140,6 +140,16 @@ body {
     font-weight: 500;
 }
 
+.bottom-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  .dh-section {
+    padding-bottom: 90px;
+  }
+
 /* ===== MEAL DETAILS PAGE ===== */
 
 .food-header {
@@ -500,3 +510,350 @@ body {
     background-color: #1a1a1a;
     color: #fff;
 }
+
+/* Dining Halls screen (mobile) */
+
+.dh-topbar{
+    position: sticky;
+    top: 0;
+    background: #fff;
+    display: grid;
+    grid-template-columns: 44px 1fr 72px;
+    align-items: center;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(0,0,0,.06);
+    z-index: 10;
+  }
+  
+  .dh-back{
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    text-decoration: none;
+    font-size: 28px;
+    line-height: 1;
+    color: #111;
+    border-radius: 10px;
+  }
+  
+  .dh-title{
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: left;
+  }
+  
+  .dh-actions{
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  .dh-action{ font-size: 16px; }
+  
+  .dh-section{
+    padding: 14px 12px 84px; /* Bottom padding for the tab bar area */
+  }
+  
+  .dh-section-title{
+    margin: 0 0 10px 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: #111;
+  }
+  
+  .dh-list{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .dh-row{
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+    padding: 10px 8px;
+    border-radius: 12px;
+  }
+  
+  .dh-left{ display: grid; place-items: center; }
+  .dh-star{ font-size: 16px; }
+  
+  .dh-mid{ min-width: 0; }
+  .dh-name{
+    font-size: 12px;
+    font-weight: 700;
+    color: #111;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .dh-desc{
+    margin-top: 2px;
+    font-size: 10px;
+    color: rgba(0,0,0,.55);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .dh-rating-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+    padding: 6px 10px;
+    border-radius: 14px;
+    background: #2b2b2b;
+  }
+  
+  .dh-rating-star{
+    font-size: 12px;
+    color: rgba(255,255,255,.45);
+    line-height: 1;
+  }
+  .dh-rating-star.is-on{
+    color: #f5c542;
+  }
+  
+  .dh-empty{
+    font-size: 12px;
+    color: rgba(0,0,0,.6);
+    padding: 12px 0;
+  }
+
+  /* ===== Dining Hall Detail (scrollable mobile screen) ===== */
+
+.hall-detail{
+    padding: 0 12px 110px; /* extra space so the CTA does not cover content */
+  }
+  
+  /* Top bar */
+  .hd-topbar{
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: #fff;
+    display: grid;
+    grid-template-columns: 44px 1fr 72px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0,0,0,.06);
+  }
+  
+  .hd-back{
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    text-decoration: none;
+    font-size: 28px;
+    line-height: 1;
+    color: #111;
+    border-radius: 10px;
+  }
+  
+  .hd-title{
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  
+  .hd-actions{
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  .hd-action{ font-size: 16px; }
+  
+  /* Hall card */
+  .hd-card{
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 12px;
+    border-radius: 14px;
+    background: #f6f6f6;
+  }
+  
+  .hd-avatar{
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    background: #ddd;
+  }
+  
+  .hd-hall-name{
+    font-weight: 800;
+    font-size: 12px;
+    color: #111;
+  }
+  
+  .hd-subtitle{
+    margin-top: 2px;
+    font-size: 10px;
+    color: rgba(0,0,0,.55);
+  }
+  
+  /* Sections */
+  .hd-section{
+    margin-top: 14px;
+  }
+  
+  .hd-section-title{
+    margin: 0 0 8px 0;
+    font-size: 12px;
+    font-weight: 800;
+    color: #111;
+  }
+  
+  /* Meals grid */
+  .hd-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  
+  .meal-card{
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 12px;
+    padding: 10px;
+    background: #fff;
+  }
+  
+  .meal-category{
+    font-size: 10px;
+    color: rgba(0,0,0,.55);
+    font-weight: 700;
+  }
+  
+  .meal-photo{
+    margin: 8px 0;
+    height: 72px;
+    border-radius: 10px;
+    background: #efefef;
+    display: grid;
+    place-items: center;
+    font-size: 10px;
+    color: rgba(0,0,0,.45);
+  }
+  
+  .meal-name{
+    font-size: 10px;
+    color: rgba(0,0,0,.55);
+    margin-top: 2px;
+  }
+  
+  .meal-desc{
+    margin-top: 2px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #111;
+  }
+  
+  /* Reviews */
+  .review-list{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .review-row{
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    gap: 10px;
+    align-items: start;
+    padding: 10px;
+    border-radius: 12px;
+    background: #f6f6f6;
+  }
+  
+  .review-avatar{
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    background: #ddd;
+    margin-top: 2px;
+  }
+  
+  .review-name{
+    font-size: 11px;
+    font-weight: 800;
+    color: #111;
+  }
+  
+  .review-text{
+    margin-top: 2px;
+    font-size: 10px;
+    color: rgba(0,0,0,.55);
+  }
+  
+  .review-stars{
+    display: inline-flex;
+    gap: 1px;
+    padding-top: 2px;
+  }
+  
+  .star{
+    font-size: 12px;
+    color: rgba(255,180,0,.35);
+    line-height: 1;
+  }
+  
+  .star.is-on{
+    color: #f5c542;
+  }
+  
+  /* Diet chips */
+  .chip-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  
+  .chip{
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 10px;
+    border-radius: 12px;
+    background: #f6f6f6;
+    font-size: 11px;
+    font-weight: 700;
+    color: #111;
+  }
+  
+  .chip-ic{
+    width: 26px;
+    height: 26px;
+    border-radius: 10px;
+    background: #fff;
+    display: grid;
+    place-items: center;
+  }
+  
+  /* Sticky CTA button */
+  .hd-cta-wrap{
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 10px 12px 18px;
+    background: linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,.92), rgba(255,255,255,0));
+  }
+  
+  .hd-cta{
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    background: #111;
+    padding: 14px 12px;
+    border-radius: 14px;
+    font-weight: 800;
+    font-size: 12px;
+  }
