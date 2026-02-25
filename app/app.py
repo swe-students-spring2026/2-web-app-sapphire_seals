@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, session
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 
@@ -23,12 +23,20 @@ app.register_blueprint(api_bp)
 
 #### Pages ####
 
-@app.route("/")
 @app.route("/home")
 def home():
     halls = list(db.halls.find())
-    return "NOT_IMPLEMENTED"
-    #return render_template("home.html", title="Home", halls=halls, show_header=False)
+    return render_template("home.html", title="Home", halls=halls, show_header=False)
+
+@app.route("/halls")
+def halls_list():
+    halls = list(db.halls.find())
+    return render_template("halls.html", title="Dining Halls", halls=halls, show_header=False)
+
+@app.route("/halls")
+def halls():
+    halls = list(db.halls.find())
+    return render_template("halls.html", title="Halls", halls=halls, show_header=False)
 
 #### Authenticated ####
 

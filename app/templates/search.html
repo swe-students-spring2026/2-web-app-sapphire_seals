@@ -1,0 +1,93 @@
+{% extends 'base.html' %} {% block content %}
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="page-header-left">
+        <a href="/">&#8249;</a>
+        <h2>Search</h2>
+    </div>
+    <div class="page-header-icons">
+        <span>🔍</span>
+    </div>
+</div>
+
+<!-- Search Bar -->
+<div class="search-bar">
+    <form action="/search" method="GET">
+        <input type="text" name="q" value="{{ query }}" placeholder="Search for a meal..." autofocus />
+    </form>
+</div>
+
+<!-- Search Results -->
+{% if query %}
+<p class="search-results-count">
+    {{ results | length }} result{{ 's' if results | length != 1 else '' }} for "{{ query }}"
+</p>
+{% endif %}
+
+{% if results %}
+<div class="search-results-list">
+    {% for food in results %}
+    <a href="/meal/{{ food.id }}" class="search-result-card">
+        <div class="food-avatar"></div>
+        <div class="search-result-info">
+            <div class="search-result-name">{{ food.name }}</div>
+            <div class="search-result-desc">{{ food.get('desc', '') }}</div>
+            {% if food.get('averageScore') and food.averageScore > 0 %}
+            <div class="search-result-rating">
+                {% for i in range(1, 6) %}
+                    {% if i <= food.averageScore | round(0, 'floor') | int %}
+                        <span class="star-filled-sm">★</span>
+                    {% else %}
+                        <span class="star-empty-sm">★</span>
+                    {% endif %}
+                {% endfor %}
+                <span class="rating-num">{{ "%.1f" | format(food.averageScore) }}</span>
+            </div>
+            {% endif %}
+            {% if food.get('calories') %}
+            <div class="search-result-meta">{{ food.calories }} cal</div>
+            {% endif %}
+        </div>
+        <div class="search-result-arrow">&#8250;</div>
+    </a>
+    {% endfor %}
+</div>
+{% elif query %}
+<div class="search-empty">
+    <div class="search-empty-icon">🍽</div>
+    <p>No meals found for "{{ query }}".</p>
+    <p class="search-empty-hint">Try a different keyword.</p>
+</div>
+{% else %}
+<div class="search-empty">
+    <div class="search-empty-icon">🔍</div>
+    <p>Search for meals across all NYU dining halls.</p>
+    <p class="search-empty-hint">Try "pasta", "chicken", or "salad".</p>
+</div>
+{% endif %}
+
+<!-- Bottom Navigation -->
+<nav class="bottom-nav">
+    <a href="/" class="nav-item">
+        <span class="nav-icon">🏠</span>
+        <span>Home</span>
+    </a>
+    <a href="/search" class="nav-item active">
+        <span class="nav-icon">🔍</span>
+        <span>Search</span>
+    </a>
+    {% if session.get('user_id') %}
+    <a href="/users/my_ratings" class="nav-item">
+        <span class="nav-icon">⭐</span>
+        <span>My Ratings</span>
+    </a>
+    {% else %}
+    <a href="/login" class="nav-item">
+        <span class="nav-icon">👤</span>
+        <span>Login</span>
+    </a>
+    {% endif %}
+</nav>
+
+{% endblock %}

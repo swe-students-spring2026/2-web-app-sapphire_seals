@@ -4,6 +4,7 @@ from functools import wraps
 
 import config
 from db import db, client
+from bson.objectid import ObjectId
 from utils import require_auth # Authentication helper
 from utils import respond # Response helper
 
@@ -20,8 +21,43 @@ def hall_detail_page(hall_id):
     if hall is None:
         return "Dining hall not found", 404
     foods = list(db.foods.find({"foodEdges.0": hall_id}))
-    return "NOT_IMPLEMENTED"
-    # return render_template("hall_detail.html", title=hall.get("name", "Dining Hall"), hall=hall, foods=foods, show_header=False)
+
+    # Build meals list in the format hall_detail.html expects
+    meals = []
+    for food in foods:
+        # Get first filter name as the category
+        category = "Menu Item"
+        if food.get("filters") and len(food["filters"]) > 0:
+            category = food["filters"][0].get("name", "Menu Item")
+
+        meals.append({
+            "id": food.get("id"),
+            "name": food.get("name", "Unknown"),
+            "desc": food.get("desc", ""),
+            "category": category,
+            "calories": food.get("calories", ""),
+            "averageScore": food.get("averageScore", 0),
+        })
+
+    # Collect all reviews from foods in this hall
+    reviews = []
+    for food in foods:
+        for r in food.get("ratings", []):
+            reviews.append({
+                "user": r.get("user_id", "Anonymous"),
+                "text": r.get("content", ""),
+                "rating": int(r.get("score", 0)),
+                "food_name": food.get("name", ""),
+            })
+
+    return render_template(
+        "hall_detail.html",
+        title=hall.get("name", "Dining Hall"),
+        hall=hall,
+        meals=meals,
+        reviews=reviews,
+        show_header=False,
+    )
 
 
 @foods_bp.route("/meal/<food_item_id>")
@@ -101,6 +137,8 @@ def meal_review_page(food_item_id, user_id):
         },
     )
 
+    username = db.users.find_one({"_id": ObjectId(user_id)}, {"_id": 0, "username": 1}).get("username", "")
+
     # If no existing rating, push a new one
     if result.matched_count == 0:
         db.foods.update_one(
@@ -109,6 +147,7 @@ def meal_review_page(food_item_id, user_id):
                 "$push": {
                     "ratings": {
                         "user_id": user_id,
+                        "username": username,
                         "score": score,
                         "content": content,
                         "createdAt": datetime.datetime.now(),
@@ -138,8 +177,7 @@ def search_page():
         results = list(db.foods.find(
             {"name": {"$regex": query, "$options": "i"}}
         ))
-    return "NOT IMPLEMENTED"
-    #return render_template("search.html", title="Search", query=query, results=results, show_header=False)
+    return render_template("search.html", title="Search", query=query, results=results, show_header=False)
 
 
 @foods_bp.route("/users/my_ratings", methods=["GET"])
@@ -150,7 +188,7 @@ def my_ratings(user_id):
     #return render_template("my_ratings.html", title="My Ratings", ratings=ratings, show_header=False)
 
 @foods_bp.route("/users/all_ratings", methods=["POST"])
-def all_ratings(user_id):
+def all_ratings():
     data = request.json
     user_id = data.get("user_id")
     if user_id is None:

@@ -2,8 +2,20 @@
 
 source ../.env
 
+if [ -f bootstrap.zip ]; then
+  echo "Removing existing bootstrap.zip"
+  rm bootstrap.zip
+fi
+
+echo "Downloading bootstrap.zip"
 wget -q -O bootstrap.zip https://big.hash.ooo/software-engineering/bootstrap.zip
+echo "Unzipping bootstrap.zip"
 unzip -o bootstrap.zip # contains all the json, prepared via dbutils.py
+
+if [[ "$(cat version)" != "2" ]]; then
+  echo "Required version of 2. Exiting."
+  exit 1
+fi
 
 function import_collection {
   local collection=$1
