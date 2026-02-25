@@ -16,15 +16,11 @@ foods_bp = Blueprint('foods', __name__)
 
 @foods_bp.route("/halls/<hall_id>")
 def hall_detail_page(hall_id):
-    try:
-        hall = db.halls.find_one({"id": hall_id})
-        if hall is None:
-            return "Dining hall not found", 404
-        foods = list(db.foods.find({"foodEdges.0": hall_id}))
-        return render_template("hall_detail.html", title=hall.get("name", "Dining Hall"), hall=hall, foods=foods, show_header=False)
-    except Exception as e:
-        print(f"Error on hall detail page: {e}")
-        return "Something went wrong", 500
+    hall = db.halls.find_one({"id": hall_id})
+    if hall is None:
+        return "Dining hall not found", 404
+    foods = list(db.foods.find({"foodEdges.0": hall_id}))
+    return render_template("hall_detail.html", title=hall.get("name", "Dining Hall"), hall=hall, foods=foods, show_header=False)
 
 
 @foods_bp.route("/meal/<food_item_id>")
