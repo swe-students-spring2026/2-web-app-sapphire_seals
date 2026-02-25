@@ -1,0 +1,78 @@
+{% extends 'base.html' %} {% block content %}
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="page-header-left">
+        <h2>RateMyCanteen</h2>
+    </div>
+    <div class="page-header-icons">
+        {% if session.get('user_id') %}
+            <a href="/logout" class="header-link" title="Logout">🚪</a>
+        {% else %}
+            <a href="/login" class="header-link" title="Login">👤</a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Welcome Banner -->
+<div class="home-banner">
+    <h3>Welcome{% if session.get('username') %}, {{ session['username'] }}{% endif %}!</h3>
+    <p>Explore NYU dining halls and rate your meals.</p>
+</div>
+
+<!-- Quick Search Bar -->
+<div class="home-search-bar">
+    <form action="/search" method="GET">
+        <input type="text" name="q" placeholder="Search for a meal..." />
+    </form>
+</div>
+
+<!-- Dining Halls List -->
+<div class="home-section-header">
+    <h3 class="section-title">Dining Halls</h3>
+    <a href="/halls" class="see-all-link">See All ›</a>
+</div>
+<div class="halls-list">
+    {% for hall in halls %}
+    <a href="/halls/{{ hall.id }}" class="hall-card">
+        <div class="hall-card-icon">🏫</div>
+        <div class="hall-card-info">
+            <div class="hall-card-name">{{ hall.name }}</div>
+            <div class="hall-card-sub">
+                {% if hall.get('greenRestaurant') %}
+                    <span class="hall-badge green">🌿 Green</span>
+                {% endif %}
+                {% if hall.get('hasNationalBrands') %}
+                    <span class="hall-badge brand">National Brand</span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="hall-card-arrow">&#8250;</div>
+    </a>
+    {% endfor %}
+</div>
+
+<!-- Bottom Navigation -->
+<nav class="bottom-nav">
+    <a href="/" class="nav-item active">
+        <span class="nav-icon">🏠</span>
+        <span>Home</span>
+    </a>
+    <a href="/search" class="nav-item">
+        <span class="nav-icon">🔍</span>
+        <span>Search</span>
+    </a>
+    {% if session.get('user_id') %}
+    <a href="/users/my_ratings" class="nav-item">
+        <span class="nav-icon">⭐</span>
+        <span>My Ratings</span>
+    </a>
+    {% else %}
+    <a href="/login" class="nav-item">
+        <span class="nav-icon">👤</span>
+        <span>Login</span>
+    </a>
+    {% endif %}
+</nav>
+
+{% endblock %}
