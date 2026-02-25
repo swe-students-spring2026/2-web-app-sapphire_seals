@@ -4,6 +4,7 @@ from functools import wraps
 
 import config
 from db import db, client
+from bson.objectid import ObjectId
 from utils import require_auth # Authentication helper
 from utils import respond # Response helper
 
@@ -20,8 +21,15 @@ def hall_detail_page(hall_id):
     if hall is None:
         return "Dining hall not found", 404
     foods = list(db.foods.find({"foodEdges.0": hall_id}))
-    return "NOT_IMPLEMENTED"
-    # return render_template("hall_detail.html", title=hall.get("name", "Dining Hall"), hall=hall, foods=foods, show_header=False)
+    # Find all reviews for foods that match this hall (foodEdges.0 == hall_id)
+    reviews = []
+    for food in foods:
+        ratings = food.get("ratings", [])
+        for rating in ratings:
+            review = dict(rating)
+            review["food_name"] = food.get("name", "")
+            reviews.append(review)
+    return render_template("hall_detail.html", title=hall.get("name", "Dining Hall"), hall=hall, foods=foods, reviews=reviews, show_header=False)
 
 
 @foods_bp.route("/meal/<food_item_id>")
@@ -101,6 +109,8 @@ def meal_review_page(food_item_id, user_id):
         },
     )
 
+    username = db.users.find_one({"_id": ObjectId(user_id)}, {"_id": 0, "username": 1}).get("username", "")
+
     # If no existing rating, push a new one
     if result.matched_count == 0:
         db.foods.update_one(
@@ -109,6 +119,7 @@ def meal_review_page(food_item_id, user_id):
                 "$push": {
                     "ratings": {
                         "user_id": user_id,
+                        "username": username,
                         "score": score,
                         "content": content,
                         "createdAt": datetime.datetime.now(),

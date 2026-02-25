@@ -20,7 +20,7 @@
     <div class="hd-avatar" aria-hidden="true"></div>
     <div class="hd-card-text">
       <div class="hd-hall-name">{{ hall.name if hall is defined and hall.name is defined else "Dining Hall Delights" }}</div>
-      <div class="hd-subtitle">{{ hall.tagline if hall is defined and hall.tagline is defined else "Today's Menu Highlights" }}</div>
+      <div class="hd-subtitle">{{ hall.mobileOrderingLabel if hall is defined and hall.mobileOrderingLabel is defined and hall.mobileOrderingLabel else "Today's Menu Highlights" }}</div>
     </div>
   </section>
 
@@ -29,14 +29,14 @@
     <h2 class="hd-section-title">Today's Meal</h2>
 
     <div class="hd-grid">
-      {# Expected: meals is a list of dicts/objects with category, name, desc. #}
-      {% if meals is defined and meals %}
-        {% for m in meals %}
+      {# foods is sourced from MongoDB; each item has category, name, desc, ratings, etc. #}
+      {% if foods is defined and foods %}
+        {% for f in foods %}
           <article class="meal-card">
-            <div class="meal-category">{{ m.category if m.category is defined else (m.get('category') if m is mapping else "Category") }}</div>
+            <div class="meal-category">{{ f.category if f.category is defined else (f.get('category') if f is mapping else "Category") }}</div>
             <div class="meal-photo" aria-hidden="true">[Food Photo]</div>
-            <div class="meal-name">{{ m.name if m.name is defined else (m.get('name') if m is mapping else "Food Name") }}</div>
-            <div class="meal-desc">[{{ m.desc if m.desc is defined else (m.get('desc') if m is mapping else "Food Description") }}]</div>
+            <div class="meal-name">{{ f.name if f.name is defined else (f.get('name') if f is mapping else "Food Name") }}</div>
+            <div class="meal-desc">[{{ f.desc if f.desc is defined else (f.get('desc') if f is mapping else "Food Description") }}]</div>
           </article>
         {% endfor %}
       {% else %}
@@ -60,12 +60,12 @@
     <div class="review-list">
       {% if reviews is defined and reviews %}
         {% for r in reviews %}
-          {% set rating = (r.rating if r.rating is defined else (r.get('rating') if r is mapping else 5))|int %}
+          {% set rating = (r.score if r.score is defined else (r.get('score') if r is mapping else 5))|int %}
           <div class="review-row">
             <div class="review-avatar" aria-hidden="true"></div>
             <div class="review-body">
-              <div class="review-name">{{ r.user if r.user is defined else (r.get('user') if r is mapping else "User") }}</div>
-              <div class="review-text">[{{ r.text if r.text is defined else (r.get('text') if r is mapping else "Review Description") }}]</div>
+              <div class="review-name">{{ r.username if r.username is defined else (r.get('username') if r is mapping else "User") }}</div>
+              <div class="review-text">[{{ (r.content if r.content is defined else (r.get('content') if r is mapping else "Review Description")) }}]</div>
             </div>
             <div class="review-stars" aria-label="Rating {{ rating }} out of 5">
               {% for i in range(1, 6) %}
