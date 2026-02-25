@@ -1,0 +1,77 @@
+{% extends 'base.html' %} {% block content %}
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="page-header-left">
+        <a href="/meal/{{ food.id }}">&#8249;</a>
+        <h2>Meal Review</h2>
+    </div>
+    <div class="page-header-icons">
+        <span>🍽</span>
+        <span>💬</span>
+        <span>📊</span>
+    </div>
+</div>
+
+<!-- Error / Success Messages -->
+{% if message %}
+    <div class="flash-msg error">{{ message }}</div>
+{% endif %}
+
+<!-- Form: entire page is one form that POSTs to Flask -->
+<form method="POST" action="/meal/{{ food.id }}/review">
+
+    <!-- Food Name, Avatar & Star Rating -->
+    <div class="review-food-header">
+        <div class="food-avatar">
+            <!-- No image field in DB, placeholder circle shown -->
+        </div>
+        <div class="review-food-info">
+            <h3>{{ food.name }}</h3>
+            <p>{{ food.get('desc', 'Healthy and Delicious') }}</p>
+
+            <!-- Pure CSS Star Rating: uses reversed radio buttons -->
+            <div class="star-rating">
+                <input type="radio" id="star5" name="score" value="5">
+                <label for="star5">★</label>
+                <input type="radio" id="star4" name="score" value="4">
+                <label for="star4">★</label>
+                <input type="radio" id="star3" name="score" value="3">
+                <label for="star3">★</label>
+                <input type="radio" id="star2" name="score" value="2">
+                <label for="star2">★</label>
+                <input type="radio" id="star1" name="score" value="1">
+                <label for="star1">★</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Text -->
+    <div class="review-description-area">
+        <textarea name="content" placeholder="Write your review here..." maxlength="1000"></textarea>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="rate-btn-container">
+        <button type="submit" class="rate-btn">Rate</button>
+    </div>
+
+</form>
+
+<!-- Bottom Navigation -->
+<nav class="bottom-nav">
+    <a href="/" class="nav-item">
+        <span class="nav-icon">🏠</span>
+        <span>Home</span>
+    </a>
+    <a href="/favorites" class="nav-item">
+        <span class="nav-icon">❤️</span>
+        <span>Favorites</span>
+    </a>
+    <a href="/search" class="nav-item">
+        <span class="nav-icon">🔍</span>
+        <span>Search</span>
+    </a>
+</nav>
+
+{% endblock %}

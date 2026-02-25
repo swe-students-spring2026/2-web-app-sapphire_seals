@@ -9,8 +9,8 @@ body {
 
 .error-message {
     background-color: #eecccc;
-    padding: 0.25em;
     /* margin-bottom: 1em; */
+    padding: 0.25em;
     margin-bottom: .5em;
     text-align: center;
 }
@@ -35,4 +35,468 @@ body {
     display: block;
     border: 1px solid #555;
     font-size: 1em;
+}
+
+/* ===== SHARED: Page Header ===== */
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.page-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.page-header-left a {
+    font-size: 24px;
+    text-decoration: none;
+    color: #1a1a1a;
+    line-height: 1;
+}
+
+.page-header-left h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.page-header-icons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 18px;
+}
+
+/* ===== SHARED: Food Avatar ===== */
+
+.food-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #e8e8e8;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.food-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ===== SHARED: Flash Messages ===== */
+
+.flash-msg {
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.flash-msg.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.flash-msg.error {
+    background-color: #fce4ec;
+    color: #c62828;
+}
+
+/* ===== SHARED: Bottom Navigation ===== */
+
+.bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0 18px;
+    border-top: 1px solid #e8e8e8;
+    margin: 0 -1em;
+    background: #fff;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    color: #888;
+    font-size: 11px;
+}
+
+.nav-item .nav-icon {
+    font-size: 22px;
+}
+
+.nav-item span {
+    font-weight: 500;
+}
+
+/* ===== MEAL DETAILS PAGE ===== */
+
+.food-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 0 16px;
+}
+
+.food-header-text h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.food-header-text p {
+    font-size: 14px;
+    color: #999;
+    margin: 2px 0 0 0;
+}
+
+.avg-rating-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background-color: #2a2a2a;
+    border-radius: 20px;
+    padding: 6px 14px;
+    margin-top: 8px;
+    font-size: 16px;
+}
+
+.avg-rating-badge .star-filled {
+    color: #f5a623;
+}
+
+.avg-rating-badge .star-empty {
+    color: #666;
+}
+
+/* Image Carousel */
+
+.meal-image-carousel {
+    background-color: #f2f2f2;
+    border-radius: 16px;
+    height: 340px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.meal-image-carousel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 16px;
+}
+
+.placeholder-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: #888;
+}
+
+.carousel-dots {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.carousel-dots .dot {
+    width: 24px;
+    height: 6px;
+    border-radius: 3px;
+    background-color: #ccc;
+}
+
+.carousel-dots .dot.active {
+    background-color: #aaa;
+}
+
+/* Nutrition Information */
+
+.section-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.nutrition-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.nutrition-card {
+    border: 1px solid #e8e8e8;
+    border-radius: 12px;
+    padding: 14px 16px;
+}
+
+.nutrition-card .label {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 6px;
+}
+
+.nutrition-card .value {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+/* Nutrients & Ingredients List */
+
+.ingredients-list {
+    margin-bottom: 24px;
+}
+
+.ingredient-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.ingredient-item:last-child {
+    border-bottom: none;
+}
+
+.ingredient-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ingredient-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.ingredient-name {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.ingredient-amount {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Ingredients Text (single string from DB) */
+
+.ingredients-text {
+    margin-bottom: 24px;
+}
+
+.ingredients-text p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+}
+
+/* Portion & Detail Rows */
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 8px;
+}
+
+.detail-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+}
+
+.detail-value {
+    font-size: 14px;
+    color: #888;
+}
+
+/* Allergen & Filter Tags */
+
+.allergens-section,
+.filters-section {
+    margin-bottom: 20px;
+}
+
+.allergen-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.allergen-tag {
+    display: inline-block;
+    background-color: #f2f2f2;
+    border-radius: 16px;
+    padding: 6px 14px;
+    font-size: 13px;
+    color: #555;
+    font-weight: 500;
+}
+
+/* Write a Review Button */
+
+.action-btn-container {
+    padding: 12px 0 20px;
+}
+
+.action-btn {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    border: 2px solid #1a1a1a;
+    border-radius: 30px;
+    background: #fff;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    color: #1a1a1a;
+}
+
+.action-btn:hover {
+    background-color: #1a1a1a;
+    color: #fff;
+}
+
+/* ===== MEAL REVIEW PAGE ===== */
+
+.review-food-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 20px 0 16px;
+}
+
+.review-food-info h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.review-food-info p {
+    font-size: 14px;
+    color: #999;
+    margin: 2px 0 0 0;
+}
+
+/* Pure CSS Star Rating (no JavaScript) */
+
+.star-rating {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 2px;
+    background-color: #2a2a2a;
+    border-radius: 20px;
+    padding: 6px 14px;
+    margin-top: 8px;
+}
+
+.star-rating input[type="radio"] {
+    display: none;
+}
+
+.star-rating label {
+    cursor: pointer;
+    font-size: 18px;
+    color: #666;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+    transition: color 0.15s;
+}
+
+.star-rating input[type="radio"]:checked ~ label {
+    color: #f5a623;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #f5a623;
+}
+
+/* Review Text Area */
+
+.review-description-area {
+    background-color: #f2f2f2;
+    border-radius: 16px;
+    min-height: 340px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.review-description-area textarea {
+    width: 100%;
+    height: 100%;
+    min-height: 340px;
+    background: transparent;
+    border: none;
+    resize: none;
+    padding: 24px;
+    font-size: 15px;
+    font-family: inherit;
+    color: #1a1a1a;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.review-description-area textarea::placeholder {
+    color: #888;
+    font-weight: 500;
+}
+
+/* Rate Submit Button */
+
+.rate-btn-container {
+    padding: 12px 0 20px;
+}
+
+.rate-btn {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    border: 2px solid #1a1a1a;
+    border-radius: 30px;
+    background: #fff;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    color: #1a1a1a;
+}
+
+.rate-btn:hover {
+    background-color: #1a1a1a;
+    color: #fff;
 }

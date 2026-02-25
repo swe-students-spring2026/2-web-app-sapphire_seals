@@ -1,0 +1,163 @@
+{% extends 'base.html' %} {% block content %}
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="page-header-left">
+        <a href="javascript:history.back()">&#8249;</a>
+        <h2>Meal Details</h2>
+    </div>
+    <div class="page-header-icons">
+        <span>🍽</span>
+        <span>💬</span>
+        <span>📊</span>
+    </div>
+</div>
+
+<!-- Flash Messages -->
+{% if message %}
+    <div class="flash-msg success">{{ message }}</div>
+{% endif %}
+
+<!-- Food Name & Avatar -->
+<div class="food-header">
+    <div class="food-avatar">
+        <!-- No image field in DB, placeholder circle shown -->
+    </div>
+    <div class="food-header-text">
+        <h3>{{ food.name }}</h3>
+        <p>{{ food.get('desc', 'Healthy and Delicious') }}</p>
+        {% if avg_score is not none and avg_score > 0 %}
+        <div class="avg-rating-badge">
+            {% for i in range(1, 6) %}
+                {% if i <= avg_score | round(0, 'floor') | int %}
+                    <span class="star-filled">★</span>
+                {% else %}
+                    <span class="star-empty">★</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Meal Image Carousel -->
+<div class="meal-image-carousel">
+    <span class="placeholder-text">Meal Images</span>
+    <div class="carousel-dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+</div>
+
+<!-- Nutrition Information -->
+<h3 class="section-title">Nutrition Information</h3>
+<div class="nutrition-grid">
+    <!-- Calories is a top-level field -->
+    <div class="nutrition-card">
+        <div class="label">Calories</div>
+        <div class="value">{{ food.get('calories', 'N/A') }}</div>
+    </div>
+    <!-- Protein, Carbs, Fats come from the nutrients array -->
+    {% set protein = 'N/A' %}
+    {% set carbs = 'N/A' %}
+    {% set fats = 'N/A' %}
+    {% for nutrient in food.get('nutrients', []) %}
+        {% if 'protein' in nutrient.name | lower %}
+            {% set protein = nutrient.value ~ nutrient.uom %}
+        {% endif %}
+        {% if 'carb' in nutrient.name | lower or 'carbohydrate' in nutrient.name | lower %}
+            {% set carbs = nutrient.value ~ nutrient.uom %}
+        {% endif %}
+        {% if 'fat' in nutrient.name | lower and 'sat' not in nutrient.name | lower and 'trans' not in nutrient.name | lower %}
+            {% set fats = nutrient.value ~ nutrient.uom %}
+        {% endif %}
+    {% endfor %}
+    <div class="nutrition-card">
+        <div class="label">Protein</div>
+        <div class="value">{{ protein }}</div>
+    </div>
+    <div class="nutrition-card">
+        <div class="label">Carbohydrates</div>
+        <div class="value">{{ carbs }}</div>
+    </div>
+    <div class="nutrition-card">
+        <div class="label">Fats</div>
+        <div class="value">{{ fats }}</div>
+    </div>
+</div>
+
+<!-- All Nutrients (full list) -->
+{% if food.get('nutrients') and food.nutrients | length > 0 %}
+<h3 class="section-title">All Nutrients</h3>
+<div class="ingredients-list">
+    {% for nutrient in food.nutrients %}
+        <div class="ingredient-item">
+            <div class="ingredient-left">
+                <span class="ingredient-name">{{ nutrient.name }}</span>
+            </div>
+            <span class="ingredient-amount">{{ nutrient.value }}{{ nutrient.uom }}</span>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Ingredients -->
+<h3 class="section-title">Ingredients</h3>
+<div class="ingredients-text">
+    <p>{{ food.get('ingredients', 'No ingredients listed.') }}</p>
+</div>
+
+<!-- Portion & Allergens -->
+{% if food.get('portion') %}
+<div class="detail-row">
+    <span class="detail-label">Portion Size</span>
+    <span class="detail-value">{{ food.portion }}</span>
+</div>
+{% endif %}
+
+{% if food.get('customAllergens') and food.customAllergens | length > 0 %}
+<div class="allergens-section">
+    <h3 class="section-title">Allergens</h3>
+    <div class="allergen-tags">
+        {% for allergen in food.customAllergens %}
+            <span class="allergen-tag">{{ allergen }}</span>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Dietary Filters -->
+{% if food.get('filters') and food.filters | length > 0 %}
+<div class="filters-section">
+    <h3 class="section-title">Dietary Info</h3>
+    <div class="allergen-tags">
+        {% for filter in food.filters %}
+            <span class="allergen-tag">{{ filter.name }}</span>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Write a Review Button -->
+<div class="action-btn-container">
+    <a href="/meal/{{ food.id }}/review" class="action-btn">Write a Review</a>
+</div>
+
+<!-- Bottom Navigation -->
+<nav class="bottom-nav">
+    <a href="/" class="nav-item">
+        <span class="nav-icon">🏠</span>
+        <span>Home</span>
+    </a>
+    <a href="/favorites" class="nav-item">
+        <span class="nav-icon">❤️</span>
+        <span>Favorites</span>
+    </a>
+    <a href="/search" class="nav-item">
+        <span class="nav-icon">🔍</span>
+        <span>Search</span>
+    </a>
+</nav>
+
+{% endblock %}

@@ -1,10 +1,12 @@
 import os
-from flask import Flask, session, request, Response
+from flask import Flask, request, render_template
 from bson.json_util import dumps
 
 import config
 from db import db, client
 from auth import auth_bp
+from utils import require_auth, respond
+from foods import foods_bp
 
 import datetime
 
@@ -13,18 +15,15 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "dev-only-change-me")
 
 app.register_blueprint(auth_bp)
+app.register_blueprint(foods_bp)
 
-def respond(status_code=200, data=None):
-    if status_code == 200:
-        return Response(
-            dumps({"ok": True, "data": data}),
-            mimetype="application/json",
-        ), status_code
-    else:
-        return Response(
-            dumps({"ok": False, "message": data}),
-            mimetype="application/json",
-        ), status_code
+#### Pages ####
+
+@app.route("/")
+def home():
+    halls = list(db.halls.find())
+    return "NOT_IMPLEMENTED"
+    #return render_template("home.html", title="Home", halls=halls, show_header=False)
 
 #### Public API ####
 
@@ -109,33 +108,11 @@ def get_all_ratings():
 
 #### Authenticated API ####
 
-from functools import wraps
-
-def require_auth(view_fn):
-    @wraps(view_fn)
-    def wrapper(*args, **kwargs):
-        user_id = session.get("user_id")
-        if not user_id:
-            return respond(401, "invalid credentials")
-        if db.users.find_one({"_id": user_id}) is None:
-            return respond(404, "User not found")
-        kwargs["user_id"] = user_id
-        return view_fn(*args, **kwargs)
-    return wrapper
-
-@app.route("/me", methods=["GET"])
+@app.route("/account")
 @require_auth
-def me(user_id):
-    return respond(data=db.users.find_one({"_id": user_id}, {"_id": 0, "username": 1, "netid": 1, "email": 1}))
-
-@app.route("/users/account", methods=["GET"]) # Authenticated
-@require_auth
-def get_user_account(user_id):
-    try:
-        return respond(data=db.users.find_one({"_id": user_id}, {"_id": 0, "username": 1, "email": 1, "netid": 1}))
-    except Exception as e:
-        print(f"Encountered error in /users/account: {e}")
-        return respond(500)
+def account_page(user_id):
+    user = db.users.find_one({"_id": user_id}, {"_id": 0, "username": 1, "email": 1, "netid": 1, "password_hash": 0})
+    return render_template("account.html", title="Account", user=user, show_header=False)
 
 @app.route("/foods/<food_item_id>/rate", methods=["POST"]) # US09, US10, US11
 @require_auth
