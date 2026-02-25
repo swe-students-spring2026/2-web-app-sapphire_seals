@@ -38,6 +38,7 @@ foods:
     calories: int
     customAllergens: str[]
     desc: str (description)
+    category: str (example: "Lunch - The Kitchen")
     filters: filter[]
         filter:
             id: str (filter id)
@@ -65,18 +66,11 @@ foods:
     ratings: rating[]
         rating:
             user_id: str (foreign key to users)
+            username: str
             score: float
             content: str
             createdAt: datetime
             updatedAt: datetime
-
-users:
-    _id = id: str (user id)
-    name: str
-    email: str
-    password: str
-    netId: str
-
 
 users:
     _id = id: str (24 hex user identification string)
@@ -139,6 +133,7 @@ def datadump():
             for food in category["items"]:
                 food["_id"] = food["id"]
                 food["foodEdges"] = [menu["locationId"], menu["id"]]
+                food["category"] = "{} - {}".format(menu['name'], category['name'])
                 food["averageScore"] = 0
                 foods.append(food)
                 for filter in food["filters"]:
