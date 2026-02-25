@@ -21,12 +21,9 @@ app.register_blueprint(foods_bp)
 
 @app.route("/")
 def home():
-    try:
-        halls = list(db.halls.find())
-        return render_template("home.html", title="Home", halls=halls, show_header=False)
-    except Exception as e:
-        print(f"Error on home page: {e}")
-        return render_template("home.html", title="Home", halls=[], show_header=False)
+    halls = list(db.halls.find())
+    return "NOT_IMPLEMENTED"
+    #return render_template("home.html", title="Home", halls=halls, show_header=False)
 
 #### Public API ####
 

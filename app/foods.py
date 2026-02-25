@@ -66,7 +66,7 @@ def meal_review_page(food_item_id, user_id):
     if request.method == "GET":
         return meal_review_template()
 
-    # DELETE — delete the review
+    # DELETE — delete the review (TODO: NOT IMPLEMENTED)
     if request.method == "DELETE":
         result = db.foods.update_one({"id": food_item_id}, {"$pull": {"ratings": {"user_id": user_id}}})
         if result.modified_count == 0:
@@ -141,14 +141,16 @@ def search_page():
         results = list(db.foods.find(
             {"name": {"$regex": query, "$options": "i"}}
         ))
-    return render_template("search.html", title="Search", query=query, results=results, show_header=False)
+    return "NOT IMPLEMENTED"
+    #return render_template("search.html", title="Search", query=query, results=results, show_header=False)
 
 
 @foods_bp.route("/users/my_ratings", methods=["GET"])
 @require_auth
 def my_ratings(user_id):
     ratings = list(db.foods.find({"ratings.user_id": user_id}))
-    return render_template("my_ratings.html", title="My Ratings", ratings=ratings, show_header=False)
+    return "NOT IMPLEMENTED"
+    #return render_template("my_ratings.html", title="My Ratings", ratings=ratings, show_header=False)
 
 @foods_bp.route("/users/all_ratings", methods=["POST"])
 def all_ratings(user_id):
@@ -156,10 +158,12 @@ def all_ratings(user_id):
     user_id = data.get("user_id")
     if user_id is None:
         return respond(400, "User ID is required")
-    if db.users.find_one({"_id": user_id}) is None:
+    user = db.users.find_one({"_id": user_id}, {"_id": 0, "username": 1})
+    if user is None:
         return respond(404, "User not found")
     ratings = list(db.foods.find({"ratings.user_id": user_id}))
-    # todo: return ratings of a specific user
+    return "NOT_IMPLEMENTED"
+    #return render_template("all_ratings.html", title="Ratings from {user}".format(user["username"]), ratings=ratings, show_header=False)
 
 
 if __name__ == '__main__':
