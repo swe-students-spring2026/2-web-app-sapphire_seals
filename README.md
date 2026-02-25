@@ -20,7 +20,7 @@ Create a mobile-friendly NYU dining guide where students can explore dining hall
 
 ## Steps necessary to run the software
 
-See instructions. Delete this line and place instructions to download, configure, and run the software here.
+See [build.md](./build.md)
 
 ## Task boards
 
