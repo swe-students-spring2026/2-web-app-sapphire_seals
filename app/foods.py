@@ -164,11 +164,3 @@ def all_ratings(user_id):
     ratings = list(db.foods.find({"ratings.user_id": user_id}))
     return "NOT_IMPLEMENTED"
     #return render_template("all_ratings.html", title="Ratings from {user}".format(user["username"]), ratings=ratings, show_header=False)
-
-
-if __name__ == '__main__':
-    app.run(
-        debug=True,
-        host=config.FLASK_HOST or "0.0.0.0",
-        port=int(config.FLASK_PORT or 5000)
-    )
