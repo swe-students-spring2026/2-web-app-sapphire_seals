@@ -138,8 +138,7 @@ def search_page():
         results = list(db.foods.find(
             {"name": {"$regex": query, "$options": "i"}}
         ))
-    return "NOT IMPLEMENTED"
-    #return render_template("search.html", title="Search", query=query, results=results, show_header=False)
+    return render_template("search.html", title="Search", query=query, results=results, show_header=False)
 
 
 @foods_bp.route("/users/my_ratings", methods=["GET"])
@@ -150,7 +149,7 @@ def my_ratings(user_id):
     #return render_template("my_ratings.html", title="My Ratings", ratings=ratings, show_header=False)
 
 @foods_bp.route("/users/all_ratings", methods=["POST"])
-def all_ratings(user_id):
+def all_ratings():
     data = request.json
     user_id = data.get("user_id")
     if user_id is None:

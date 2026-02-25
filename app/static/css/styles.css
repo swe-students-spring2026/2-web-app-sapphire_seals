@@ -409,7 +409,7 @@ body {
     margin: 2px 0 0 0;
 }
 
-/* Pure CSS Star Rating (no JavaScript) */
+/* Pure CSS Star Rating */
 
 .star-rating {
     display: inline-flex;
@@ -499,4 +499,246 @@ body {
 .rate-btn:hover {
     background-color: #1a1a1a;
     color: #fff;
+}
+
+/* ===== HOME PAGE ===== */
+
+.home-banner {
+    background-color: #2a2a2a;
+    color: #fff;
+    border-radius: 16px;
+    padding: 24px 20px;
+    margin: 16px 0 20px;
+}
+
+.home-banner h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+}
+
+.home-banner p {
+    font-size: 14px;
+    color: #bbb;
+    margin: 0;
+}
+
+.home-search-bar {
+    margin-bottom: 24px;
+}
+
+.home-search-bar input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid #e8e8e8;
+    border-radius: 30px;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+    background-color: #f2f2f2;
+}
+
+.home-search-bar input:focus {
+    border-color: #888;
+    background-color: #fff;
+}
+
+.halls-list {
+    margin-bottom: 24px;
+}
+
+.hall-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid #f0f0f0;
+    text-decoration: none;
+    color: inherit;
+}
+
+.hall-card:last-child {
+    border-bottom: none;
+}
+
+.hall-card-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background-color: #f2f2f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.hall-card-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.hall-card-name {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+
+.hall-card-sub {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.hall-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+.hall-badge.green {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.hall-badge.brand {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.hall-card-arrow {
+    font-size: 22px;
+    color: #ccc;
+    flex-shrink: 0;
+}
+
+.header-link {
+    text-decoration: none;
+    font-size: 20px;
+}
+
+/* Active state for bottom nav */
+.nav-item.active {
+    color: #1a1a1a;
+}
+
+/* ===== SEARCH PAGE ===== */
+
+.search-bar {
+    margin: 16px 0 20px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid #e8e8e8;
+    border-radius: 30px;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+    background-color: #f2f2f2;
+}
+
+.search-bar input:focus {
+    border-color: #888;
+    background-color: #fff;
+}
+
+.search-results-count {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 12px;
+}
+
+.search-results-list {
+    margin-bottom: 24px;
+}
+
+.search-result-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid #f0f0f0;
+    text-decoration: none;
+    color: inherit;
+}
+
+.search-result-card:last-child {
+    border-bottom: none;
+}
+
+.search-result-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.search-result-name {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.search-result-desc {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 4px;
+}
+
+.search-result-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    margin-bottom: 2px;
+}
+
+.star-filled-sm {
+    color: #f5a623;
+    font-size: 13px;
+}
+
+.star-empty-sm {
+    color: #ddd;
+    font-size: 13px;
+}
+
+.rating-num {
+    font-size: 12px;
+    color: #888;
+    margin-left: 4px;
+}
+
+.search-result-meta {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.search-result-arrow {
+    font-size: 22px;
+    color: #ccc;
+    flex-shrink: 0;
+}
+
+.search-empty {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.search-empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.search-empty p {
+    font-size: 16px;
+    color: #555;
+    margin: 0 0 6px 0;
+}
+
+.search-empty-hint {
+    font-size: 14px !important;
+    color: #aaa !important;
 }
