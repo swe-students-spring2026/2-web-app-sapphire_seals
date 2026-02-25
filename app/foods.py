@@ -4,6 +4,7 @@ from functools import wraps
 
 import config
 from db import db, client
+from bson.objectid import ObjectId
 from utils import require_auth # Authentication helper
 from utils import respond # Response helper
 
@@ -136,6 +137,8 @@ def meal_review_page(food_item_id, user_id):
         },
     )
 
+    username = db.users.find_one({"_id": ObjectId(user_id)}, {"_id": 0, "username": 1}).get("username", "")
+
     # If no existing rating, push a new one
     if result.matched_count == 0:
         db.foods.update_one(
@@ -144,6 +147,7 @@ def meal_review_page(food_item_id, user_id):
                 "$push": {
                     "ratings": {
                         "user_id": user_id,
+                        "username": username,
                         "score": score,
                         "content": content,
                         "createdAt": datetime.datetime.now(),

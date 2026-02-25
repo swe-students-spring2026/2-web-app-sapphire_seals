@@ -23,7 +23,6 @@ app.register_blueprint(api_bp)
 
 #### Pages ####
 
-@app.route("/")
 @app.route("/home")
 def home():
     halls = list(db.halls.find())
@@ -33,6 +32,11 @@ def home():
 def halls_list():
     halls = list(db.halls.find())
     return render_template("halls.html", title="Dining Halls", halls=halls, show_header=False)
+
+@app.route("/halls")
+def halls():
+    halls = list(db.halls.find())
+    return render_template("halls.html", title="Halls", halls=halls, show_header=False)
 
 #### Authenticated ####
 

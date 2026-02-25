@@ -150,3 +150,4 @@ cython_debug/
 # db bootstrap files
 mongodb/*.zip
 mongodb/*.json
+mongodb/version
