@@ -53,37 +53,58 @@
 <!-- Nutrition Information -->
 <h3 class="section-title">Nutrition Information</h3>
 <div class="nutrition-grid">
-    <!-- Calories is a top-level field -->
+    {% set nutrients_map = namespace(value={}) %}
+    {% if food.get('nutrients') %}
+        {% for nutrient in food.nutrients %}
+            {% set _ = nutrients_map.value.update({nutrient.name: nutrient}) %}
+        {% endfor %}
+    {% endif %}
+
+    <!-- Calories -->
     <div class="nutrition-card">
         <div class="label">Calories</div>
-        <div class="value">{{ food.get('calories', 'N/A') }}</div>
+        <div class="value">
+            {% if nutrients_map.value.get('Calories') %}
+                {{ nutrients_map.value['Calories'].value }}{{ nutrients_map.value['Calories'].uom }}
+            {% elif food.get('calories') %}
+                {{ food.get('calories') }}
+            {% else %}
+                N/A
+            {% endif %}
+        </div>
     </div>
-    <!-- Protein, Carbs, Fats come from the nutrients array -->
-    {% set protein = 'N/A' %}
-    {% set carbs = 'N/A' %}
-    {% set fats = 'N/A' %}
-    {% for nutrient in food.get('nutrients', []) %}
-        {% if 'protein' in nutrient.name | lower %}
-            {% set protein = nutrient.value ~ nutrient.uom %}
-        {% endif %}
-        {% if 'carb' in nutrient.name | lower or 'carbohydrate' in nutrient.name | lower %}
-            {% set carbs = nutrient.value ~ nutrient.uom %}
-        {% endif %}
-        {% if 'fat' in nutrient.name | lower and 'sat' not in nutrient.name | lower and 'trans' not in nutrient.name | lower %}
-            {% set fats = nutrient.value ~ nutrient.uom %}
-        {% endif %}
-    {% endfor %}
+    <!-- Protein -->
     <div class="nutrition-card">
         <div class="label">Protein</div>
-        <div class="value">{{ protein }}</div>
+        <div class="value">
+            {% if nutrients_map.value.get('Protein (g)') %}
+                {{ nutrients_map.value['Protein (g)'].value }}{{ nutrients_map.value['Protein (g)'].uom }}
+            {% else %}
+                N/A
+            {% endif %}
+        </div>
     </div>
+    <!-- Carbohydrates -->
     <div class="nutrition-card">
         <div class="label">Carbohydrates</div>
-        <div class="value">{{ carbs }}</div>
+        <div class="value">
+            {% if nutrients_map.value.get('Total Carbohydrates (g)') %}
+                {{ nutrients_map.value['Total Carbohydrates (g)'].value }}{{ nutrients_map.value['Total Carbohydrates (g)'].uom }}
+            {% else %}
+                N/A
+            {% endif %}
+        </div>
     </div>
+    <!-- Fats -->
     <div class="nutrition-card">
         <div class="label">Fats</div>
-        <div class="value">{{ fats }}</div>
+        <div class="value">
+            {% if nutrients_map.value.get('Total Fat (g)') %}
+                {{ nutrients_map.value['Total Fat (g)'].value }}{{ nutrients_map.value['Total Fat (g)'].uom }}
+            {% else %}
+                N/A
+            {% endif %}
+        </div>
     </div>
 </div>
 
