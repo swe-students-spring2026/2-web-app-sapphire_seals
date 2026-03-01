@@ -8,97 +8,6 @@ body {
     font-size: 1.25em;
 }
 
-.lr-error-message {
-    background-color: #eecccc;
-    /* margin-bottom: 1em; */
-    padding: 0.25em;
-    margin-bottom: .5em;
-    text-align: center;
-    font-size: .75em;
-    font-weight: bold;
-}
-
-.lr-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.lr-card {
-    /* black, rounded border */
-    /* border: 1px solid black; */
-    /* border-radius: 8px; */
-    padding: 1rem;
-
-    margin-top: 1rem;
-    overflow: auto;
-}
-
-.lr-card * {
-    border-radius: 8px;
-    display: grid;
-}
-
-.lr-form {
-    margin: auto;
-    margin-top: 0px;
-    width: 300px;
-    display: grid;
-    grid-template-rows: auto 100px auto;
-}
-
-.lr-form lr-grid-top {
-    grid-row: 1;
-    justify-self: start;
-}
-
-.lr-form lr-grid-bottom {
-    justify-self: end;
-    grid-row-end: -1;
-}
-
-.lr-form form,
-.lr-form div,
-.lr-form label {
-    font-size: 1em;
-    padding-bottom: 0.5em;
-}
-
-.lr-form input,
-.lr-form button {
-    display: block;
-    border: 1px solid #555;
-    font-size: 1em;
-    height: fit-content;
-}
-
-.lr-form button,
-.lr-form input {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    padding: .2em;
-}
-
-.lr-form button:hover,
-.lr-form input:hover {
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-}
-
-.lr-form .submit-button {
-    background-color: white;
-    color: black;
-}
-
-.lr-form .alt-button {
-    background-color: black;
-    color: white;
-    margin-bottom: .5em;
-}
-
-.alt-button a {
-    text-decoration: none;
-    color: white;
-}
-
 /* ===== SHARED: Page Header ===== */
 
 .page-header {
@@ -1200,4 +1109,97 @@ body {
 .search-empty-hint {
     font-size: 14px !important;
     color: #aaa !important;
+}
+
+/* ==== login & registration page ===== */
+
+.lr-error-message {
+    background-color: #eecccc;
+    /* margin-bottom: 1em; */
+    padding: 0.25em;
+    margin-bottom: .5em;
+    text-align: center;
+    font-size: .75em;
+    font-weight: bold;
+}
+
+.lr-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lr-card {
+    /* black, rounded border */
+    /* border: 1px solid black; */
+    /* border-radius: 8px; */
+    padding: 1rem;
+
+    margin-top: 1rem;
+    overflow: auto;
+}
+
+.lr-card * {
+    border-radius: 8px;
+    display: grid;
+}
+
+.lr-form {
+    margin: auto;
+    margin-top: 0px;
+    width: 300px;
+    display: grid;
+    grid-template-rows: auto 100px auto;
+}
+
+.lr-form lr-grid-top {
+    grid-row: 1;
+    justify-self: start;
+}
+
+.lr-form lr-grid-bottom {
+    justify-self: end;
+    grid-row-end: -1;
+}
+
+.lr-form form,
+.lr-form div,
+.lr-form label {
+    font-size: 1em;
+    padding-bottom: 0.5em;
+}
+
+.lr-form input,
+.lr-form button {
+    display: block;
+    border: 1px solid #555;
+    font-size: 1em;
+    height: fit-content;
+}
+
+.lr-form button,
+.lr-form input {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    padding: .2em;
+}
+
+.lr-form button:hover,
+.lr-form input:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.lr-form .submit-button {
+    background-color: white;
+    color: black;
+}
+
+.lr-form .alt-button {
+    background-color: black;
+    color: white;
+    margin-bottom: .5em;
+}
+
+.alt-button a {
+    text-decoration: none;
+    color: white;
 }
