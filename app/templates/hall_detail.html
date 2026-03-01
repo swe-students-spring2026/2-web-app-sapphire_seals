@@ -43,12 +43,11 @@
                 {% if m.averageScore and m.averageScore > 0 %}
                 <div class="review-stars" style="margin-top:4px;">
                     {% for i in range(1, 6) %}
-                        {% if i <= m.averageScore | round(0, 'floor') | int %}
-                            <span class="star is-on">★</span>
+                    {% if i <= m.averageScore | round(0, 'floor' ) | int %} <span class="star is-on">★</span>
                         {% else %}
-                            <span class="star">★</span>
+                        <span class="star">★</span>
                         {% endif %}
-                    {% endfor %}
+                        {% endfor %}
                 </div>
                 {% endif %}
             </a>
@@ -74,12 +73,11 @@
                 </div>
                 <div class="review-stars" aria-label="Rating {{ r.rating }} out of 5">
                     {% for i in range(1, 6) %}
-                        {% if i <= r.rating %}
-                            <span class="star is-on">★</span>
+                    {% if i <= r.rating %} <span class="star is-on">★</span>
                         {% else %}
-                            <span class="star">★</span>
+                        <span class="star">★</span>
                         {% endif %}
-                    {% endfor %}
+                        {% endfor %}
                 </div>
             </div>
             {% endfor %}

@@ -1,58 +1,52 @@
 {% extends 'base.html' %} {% block content %}
-<h2>Register</h2>
-{% if message %}
-<div class="error-message">{{ message }}</div>
-{% endif %}
 
-<form class="login-logout" method="POST" action="register">
-  <div>
-    <label for="username">Username:</label>
-    <input
-      type="text"
-      name="username"
-      value=""
-      placeholder="Enter your username"
-    />
+<div class="page-header">
+  <div class="page-header-left">
+    <h2>Login</h1>
   </div>
-  <div>
-    <label for="netid">NYU Net-ID:</label>
-    <input
-      type="text"
-      name="netid"
-      value=""
-      placeholder="Enter your NYU Net-ID"
-    />
-  </div>
-  <div>
-    <label for="email">NYU Email:</label>
-    <input
-      type="email"
-      name="email"
-      value=""
-      placeholder="Enter your NYU email"
-    />
-  </div>
-  <div>
-    <label for="password">Password:</label>
-    <input
-      type="password"
-      name="password"
-      value=""
-      placeholder="Enter your password"
-    />
-  </div>
+</div>
 
-  <div>
-    <label for="re-enter-password">Re-enter Password:</label>
-    <input
-      type="password"
-      name="re-enter-password"
-      value=""
-      placeholder="Enter your password"
-    />
-  </div>
+<div class="lr-container">
+  <div class="lr-card">
+    <form class="lr-form" method="POST" action="register">
 
-  <div>Already registered? <a href=" {{url_for('auth.login')}}">Login</a></div>
-  <div><input type="submit" value="Register" /></div>
-</form>
+      <div class="lr-grid-top">
+        {% if message %}
+        <div class="lr-error-message">{{ message }}</div>
+        {% endif %}
+        <div>
+          <label for="username">Username:</label>
+          <input type="text" name="username" value="" placeholder="Enter your username" />
+        </div>
+        <div>
+          <label for="netid">NYU Net-ID:</label>
+          <input type="text" name="netid" value="" placeholder="Enter your NYU Net-ID" />
+        </div>
+        <div>
+          <label for="email">NYU Email:</label>
+          <input type="email" name="email" value="" placeholder="Enter your NYU email" />
+        </div>
+        <div>
+          <label for="password">Password:</label>
+          <input type="password" name="password" value="" placeholder="Enter your password" />
+        </div>
+
+        <div>
+          <label for="re-enter-password">Re-enter Password:</label>
+          <input type="password" name="re-enter-password" value="" placeholder="Enter your password" />
+        </div>
+      </div>
+
+      <div></div>
+
+      <div class="lr-grid-bottom">
+
+        <button class="alt-button">
+          <a href="{{ url_for('auth.login') }}">Login In</a>
+        </button>
+        <div><input type="submit" value="Register" /></div>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}
