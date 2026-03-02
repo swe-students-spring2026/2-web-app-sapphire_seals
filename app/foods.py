@@ -1,19 +1,19 @@
-import os
 from flask import Flask, session, request, render_template, redirect, Blueprint
 from functools import wraps
 
 import config
 from db import db, client
 from bson.objectid import ObjectId
-from utils import require_auth # Authentication helper
-from utils import respond # Response helper
+from utils import require_auth  # Authentication helper
+from utils import respond  # Response helper
 
 import datetime
 
 
-foods_bp = Blueprint('foods', __name__)
+foods_bp = Blueprint("foods", __name__)
 
 #### Page Routes ####
+
 
 @foods_bp.route("/halls/<hall_id>")
 def hall_detail_page(hall_id):
@@ -25,26 +25,30 @@ def hall_detail_page(hall_id):
     # Build meals list in the format hall_detail.html expects
     meals = []
     for food in foods:
-        meals.append({
-            "id": food.get("id"),
-            "name": food.get("name", "Unknown"),
-            "desc": food.get("desc", ""),
-            "category": food.get("category", ""),
-            "calories": food.get("calories", ""),
-            "averageScore": food.get("averageScore", 0),
-        })
+        meals.append(
+            {
+                "id": food.get("id"),
+                "name": food.get("name", "Unknown"),
+                "desc": food.get("desc", ""),
+                "category": food.get("category", ""),
+                "calories": food.get("calories", ""),
+                "averageScore": food.get("averageScore", 0),
+            }
+        )
 
     # Collect all reviews and filters from foods in this hall
     reviews = []
     filters = []
     for food in foods:
         for r in food.get("ratings", []):
-            reviews.append({
-                "user": r.get("username", "Anonymous"),
-                "text": r.get("content", ""),
-                "rating": int(r.get("score", 0)),
-                "food_name": food.get("name", ""),
-            })
+            reviews.append(
+                {
+                    "user": r.get("username", "Anonymous"),
+                    "text": r.get("content", ""),
+                    "rating": int(r.get("score", 0)),
+                    "food_name": food.get("name", ""),
+                }
+            )
         for f in food.get("filters", []):
             if f not in filters:
                 filters.append(f)
@@ -82,26 +86,38 @@ def meal_detail_page(food_item_id):
 @foods_bp.route("/meal/<food_item_id>/review", methods=["GET", "POST", "DELETE"])
 @require_auth
 def meal_review_page(food_item_id, user_id):
-    def meal_review_template(message=None):
+    def meal_review_template(message=None, review={}):
         return render_template(
             "meal_review.html",
             title="Meal Review",
             food=food,
             message=message,
             show_header=False,
+            content=review.get("content", ""),
+            score=review.get("score", 0),
         )
 
     food = db.foods.find_one({"id": food_item_id})
     if food is None:
         return meal_review_template(message="Food item not found!")
 
+    review = {"score": 0, "content": "content"}
+
+    for r in food.get("ratings", {}):
+        if r.get("user_id", "") == user_id:
+            review["content"] = r.get("content", "")
+            review["score"] = int(r.get("score", 0))
+            break
+
     # GET — show the form
     if request.method == "GET":
-        return meal_review_template()
+        return meal_review_template(review=review)
 
     # DELETE — delete the review (TODO: NOT IMPLEMENTED)
     if request.method == "DELETE":
-        result = db.foods.update_one({"id": food_item_id}, {"$pull": {"ratings": {"user_id": user_id}}})
+        result = db.foods.update_one(
+            {"id": food_item_id}, {"$pull": {"ratings": {"user_id": user_id}}}
+        )
         if result.modified_count == 0:
             return meal_review_template(message="You haven't rated this food item yet!")
         return redirect(f"/meal/{food_item_id}?message=Review+deleted+successfully!")
@@ -137,7 +153,9 @@ def meal_review_page(food_item_id, user_id):
         },
     )
 
-    username = db.users.find_one({"_id": ObjectId(user_id)}, {"_id": 0, "username": 1}).get("username", "")
+    username = db.users.find_one(
+        {"_id": ObjectId(user_id)}, {"_id": 0, "username": 1}
+    ).get("username", "")
 
     # If no existing rating, push a new one
     if result.matched_count == 0:
@@ -174,18 +192,38 @@ def search_page():
     query = request.args.get("q", "").strip()
     results = []
     if query:
-        results = list(db.foods.find(
-            {"name": {"$regex": query, "$options": "i"}}
-        ))
-    return render_template("search.html", title="Search", query=query, results=results, show_header=False)
+        results = list(db.foods.find({"name": {"$regex": query, "$options": "i"}}))
+    return render_template(
+        "search.html", title="Search", query=query, results=results, show_header=False
+    )
 
 
 @foods_bp.route("/users/my_ratings", methods=["GET"])
 @require_auth
 def my_ratings(user_id):
-    ratings = list(db.foods.find({"ratings.user_id": user_id}))
-    return "NOT IMPLEMENTED"
-    #return render_template("my_ratings.html", title="My Ratings", ratings=ratings, show_header=False)
+    reviews = []
+
+    for food in db.foods.find({"ratings.user_id": user_id}):
+        for r in food.get("ratings", []):
+            if r.get("user_id", "") == user_id:
+                reviews.append(
+                    {
+                        "user": r.get("username", "Anonymous"),
+                        "text": r.get("content", ""),
+                        "rating": int(r.get("score", 0)),
+                        "food_name": food.get("name", "Food Name"),
+                        "food_id": food.get("id", ""),
+                    }
+                )
+
+    # return "NOT IMPLEMENTED"
+    return render_template(
+        "my_ratings.html",
+        title="My Ratings",
+        ratings=reviews,
+        show_header=False,
+    )
+
 
 @foods_bp.route("/users/all_ratings", methods=["POST"])
 def all_ratings():
@@ -197,5 +235,10 @@ def all_ratings():
     if user is None:
         return respond(404, "User not found")
     ratings = list(db.foods.find({"ratings.user_id": user_id}))
-    return "NOT_IMPLEMENTED"
-    #return render_template("all_ratings.html", title="Ratings from {user}".format(user["username"]), ratings=ratings, show_header=False)
+    return "NOT IMPLEMENTED"
+    # return render_template(
+    #     "all_ratings.html",
+    #     title="Ratings from {user}".format(user["username"]),
+    #     ratings=ratings,
+    #     show_header=False,
+    # )
