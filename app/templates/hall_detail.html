@@ -41,14 +41,18 @@
         <div class="meal-desc">{{ m.name }}</div>
         <div class="meal-name">{{ m.desc }}</div>
 
-        {% if m.averageScore and m.averageScore > 0 %}
-        <div class="review-stars" style="margin-top: 4px">
-          {% for i in range(1, 6) %} {% if i <= m.averageScore | round(0,
-          'floor') | int %}
-          <span class="star is-on">★</span>
-          {% else %}
-          <span class="star">★</span>
-          {% endif %} {% endfor %}
+                {% if m.averageScore and m.averageScore > 0 %}
+                <div class="review-stars" style="margin-top:4px;">
+                    {% for i in range(1, 6) %}
+                    {% if i <= m.averageScore | round(0, 'floor' ) | int %} <span class="star is-on">★</span>
+                        {% else %}
+                        <span class="star">★</span>
+                        {% endif %}
+                        {% endfor %}
+                </div>
+                {% endif %}
+            </a>
+            {% endfor %}
         </div>
         {% endif %}
       </a>
@@ -63,16 +67,25 @@
   <section class="hd-section">
     <h2 class="hd-section-title">Reviews</h2>
 
-    {% if reviews and reviews | length > 0 %}
-    <div class="review-list">
-      {% for r in reviews[:15] %}
-      <div class="review-row">
-        <div class="review-avatar" aria-hidden="true"></div>
-        <div class="review-body">
-          <div class="review-name">{{ r.food_name }}</div>
-          <div class="review-text">
-            {{ r.text[:150] }}{% if r.text | length > 150 %}...{% endif %}
-          </div>
+        {% if reviews and reviews | length > 0 %}
+        <div class="review-list">
+            {% for r in reviews[:15] %}
+            <div class="review-row">
+                <div class="review-avatar" aria-hidden="true"></div>
+                <div class="review-body">
+                    <div class="review-name">{{ r.food_name }}</div>
+                    <div class="review-text">{{ r.text[:150] }}{% if r.text | length > 150 %}...{% endif %}</div>
+                </div>
+                <div class="review-stars" aria-label="Rating {{ r.rating }} out of 5">
+                    {% for i in range(1, 6) %}
+                    {% if i <= r.rating %} <span class="star is-on">★</span>
+                        {% else %}
+                        <span class="star">★</span>
+                        {% endif %}
+                        {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
         </div>
         <div class="review-stars" aria-label="Rating {{ r.rating }} out of 5">
           {% for i in range(1, 6) %} {% if i <= r.rating %}
