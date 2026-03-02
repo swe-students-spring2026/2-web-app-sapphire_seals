@@ -1,40 +1,11 @@
 .content {
     padding: 0em 1em 1em 1em;
+
 }
 
 body {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 1.25em;
-}
-
-.error-message {
-    background-color: #eecccc;
-    /* margin-bottom: 1em; */
-    padding: 0.25em;
-    margin-bottom: .5em;
-    text-align: center;
-}
-
-.login-logout {
-    height: 100vh;
-    margin: auto;
-    margin-top: 0px;
-}
-
-.login-logout form,
-.login-logout div,
-.login-logout label {
-    padding-bottom: 0.5em;
-}
-
-.login-logout a {
-    text-decoration: none;
-}
-
-.login-logout input {
-    display: block;
-    border: 1px solid #555;
-    font-size: 1em;
 }
 
 /* ===== SHARED: Page Header ===== */
@@ -145,10 +116,11 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-  }
-  .dh-section {
+}
+
+.dh-section {
     padding-bottom: 90px;
-  }
+}
 
 /* ===== MEAL DETAILS PAGE ===== */
 
@@ -338,6 +310,7 @@ body {
     margin-bottom: 8px;
 }
 
+
 .detail-label {
     font-size: 14px;
     font-weight: 600;
@@ -446,12 +419,12 @@ body {
     transition: color 0.15s;
 }
 
-.star-rating input[type="radio"]:checked ~ label {
+.star-rating input[type="radio"]:checked~label {
     color: #f5a623;
 }
 
 .star-rating label:hover,
-.star-rating label:hover ~ label {
+.star-rating label:hover~label {
     color: #f5a623;
 }
 
@@ -513,7 +486,7 @@ body {
 
 /* Dining Halls screen (mobile) */
 
-.dh-topbar{
+.dh-topbar {
     position: sticky;
     top: 0;
     background: #fff;
@@ -521,11 +494,11 @@ body {
     grid-template-columns: 44px 1fr 72px;
     align-items: center;
     padding: 10px 12px;
-    border-bottom: 1px solid rgba(0,0,0,.06);
+    border-bottom: 1px solid rgba(0, 0, 0, .06);
     z-index: 10;
 }
-  
-.dh-back{
+
+.dh-back {
     width: 36px;
     height: 36px;
     display: grid;
@@ -536,42 +509,43 @@ body {
     color: #111;
     border-radius: 10px;
 }
-  
-.dh-title{
+
+.dh-title {
     margin: 0;
     font-size: 16px;
     font-weight: 700;
     text-align: left;
 }
-  
-.dh-actions{
+
+.dh-actions {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
 }
-  
-.dh-action{ 
-    font-size: 16px; 
+
+.dh-action {
+    font-size: 16px;
 }
-  
-.dh-section{
-    padding: 14px 12px 84px; /* Bottom padding for the tab bar area */
+
+.dh-section {
+    padding: 14px 12px 84px;
+    /* Bottom padding for the tab bar area */
 }
-  
-.dh-section-title{
+
+.dh-section-title {
     margin: 0 0 10px 0;
     font-size: 13px;
     font-weight: 700;
     color: #111;
 }
-  
-.dh-list{
+
+.dh-list {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
-  
-.dh-row{
+
+.dh-row {
     display: grid;
     grid-template-columns: 28px 1fr auto;
     align-items: center;
@@ -581,21 +555,21 @@ body {
     padding: 10px 8px;
     border-radius: 12px;
 }
-    
-.dh-left{ 
-    display: grid; 
-    place-items: center; 
+
+.dh-left {
+    display: grid;
+    place-items: center;
 }
 
-.dh-star{ 
-    font-size: 16px; 
-}
-  
-.dh-mid{ 
-    min-width: 0; 
+.dh-star {
+    font-size: 16px;
 }
 
-.dh-name{
+.dh-mid {
+    min-width: 0;
+}
+
+.dh-name {
     font-size: 12px;
     font-weight: 700;
     color: #111;
@@ -604,16 +578,16 @@ body {
     text-overflow: ellipsis;
 }
 
-.dh-desc{
+.dh-desc {
     margin-top: 2px;
     font-size: 10px;
-    color: rgba(0,0,0,.55);
+    color: rgba(0, 0, 0, .55);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-  
-.dh-rating-pill{
+
+.dh-rating-pill {
     display: inline-flex;
     align-items: center;
     gap: 1px;
@@ -621,31 +595,32 @@ body {
     border-radius: 14px;
     background: #2b2b2b;
 }
-  
-.dh-rating-star{
+
+.dh-rating-star {
     font-size: 12px;
-    color: rgba(255,255,255,.45);
+    color: rgba(255, 255, 255, .45);
     line-height: 1;
 }
 
-.dh-rating-star.is-on{
+.dh-rating-star.is-on {
     color: #f5c542;
 }
-  
-.dh-empty{
+
+.dh-empty {
     font-size: 12px;
-    color: rgba(0,0,0,.6);
+    color: rgba(0, 0, 0, .6);
     padding: 12px 0;
 }
 
-  /* ===== Dining Hall Detail */
+/* ===== Dining Hall Detail */
 
-.hall-detail{
-    padding: 0 12px 110px; /* extra space so the CTA does not cover content */
+.hall-detail {
+    padding: 0 12px 110px;
+    /* extra space so the CTA does not cover content */
 }
-  
-  /* Top bar */
-.hd-topbar{
+
+/* Top bar */
+.hd-topbar {
     position: sticky;
     top: 0;
     z-index: 20;
@@ -654,10 +629,10 @@ body {
     grid-template-columns: 44px 1fr 72px;
     align-items: center;
     padding: 10px 0;
-    border-bottom: 1px solid rgba(0,0,0,.06);
+    border-bottom: 1px solid rgba(0, 0, 0, .06);
 }
-  
-.hd-back{
+
+.hd-back {
     width: 36px;
     height: 36px;
     display: grid;
@@ -668,25 +643,25 @@ body {
     color: #111;
     border-radius: 10px;
 }
-  
-.hd-title{
+
+.hd-title {
     margin: 0;
     font-size: 14px;
     font-weight: 700;
 }
-  
-.hd-actions{
+
+.hd-actions {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
 }
 
-.hd-action{ 
-    font-size: 16px; 
+.hd-action {
+    font-size: 16px;
 }
-  
+
 /* Hall card */
-.hd-card{
+.hd-card {
     margin-top: 10px;
     display: grid;
     grid-template-columns: 44px 1fr;
@@ -696,59 +671,59 @@ body {
     border-radius: 14px;
     background: #f6f6f6;
 }
-  
-.hd-avatar{
+
+.hd-avatar {
     width: 40px;
     height: 40px;
     border-radius: 999px;
     background: #ddd;
 }
-  
-.hd-hall-name{
+
+.hd-hall-name {
     font-weight: 800;
     font-size: 12px;
     color: #111;
 }
-  
-.hd-subtitle{
+
+.hd-subtitle {
     margin-top: 2px;
     font-size: 10px;
-    color: rgba(0,0,0,.55);
+    color: rgba(0, 0, 0, .55);
 }
-  
-  /* Sections */
-.hd-section{
+
+/* Sections */
+.hd-section {
     margin-top: 14px;
 }
-  
-.hd-section-title{
+
+.hd-section-title {
     margin: 0 0 8px 0;
     font-size: 12px;
     font-weight: 800;
     color: #111;
 }
-  
+
 /* Meals grid */
-.hd-grid{
+.hd-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
 }
-  
-.meal-card{
-    border: 1px solid rgba(0,0,0,.08);
+
+.meal-card {
+    border: 1px solid rgba(0, 0, 0, .08);
     border-radius: 12px;
     padding: 10px;
     background: #fff;
 }
-  
-.meal-category{
+
+.meal-category {
     font-size: 10px;
-    color: rgba(0,0,0,.55);
+    color: rgba(0, 0, 0, .55);
     font-weight: 700;
 }
-  
-.meal-photo{
+
+.meal-photo {
     margin: 8px 0;
     height: 72px;
     border-radius: 10px;
@@ -756,30 +731,30 @@ body {
     display: grid;
     place-items: center;
     font-size: 10px;
-    color: rgba(0,0,0,.45);
+    color: rgba(0, 0, 0, .45);
 }
-  
-.meal-name{
+
+.meal-name {
     font-size: 10px;
-    color: rgba(0,0,0,.55);
+    color: rgba(0, 0, 0, .55);
     margin-top: 2px;
 }
-  
-.meal-desc{
+
+.meal-desc {
     margin-top: 2px;
     font-size: 11px;
     font-weight: 800;
     color: #111;
 }
-  
+
 /* Reviews */
-.review-list{
+.review-list {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
-  
-.review-row{
+
+.review-row {
     display: grid;
     grid-template-columns: 28px 1fr auto;
     gap: 10px;
@@ -788,51 +763,51 @@ body {
     border-radius: 12px;
     background: #f6f6f6;
 }
-  
-.review-avatar{
+
+.review-avatar {
     width: 24px;
     height: 24px;
     border-radius: 999px;
     background: #ddd;
     margin-top: 2px;
 }
-  
-.review-name{
+
+.review-name {
     font-size: 11px;
     font-weight: 800;
     color: #111;
 }
-  
-.review-text{
+
+.review-text {
     margin-top: 2px;
     font-size: 10px;
-    color: rgba(0,0,0,.55);
+    color: rgba(0, 0, 0, .55);
 }
-  
-.review-stars{
+
+.review-stars {
     display: inline-flex;
     gap: 1px;
     padding-top: 2px;
 }
-  
-.star{
+
+.star {
     font-size: 12px;
-    color: rgba(255,180,0,.35);
+    color: rgba(255, 180, 0, .35);
     line-height: 1;
 }
-  
-.star.is-on{
+
+.star.is-on {
     color: #f5c542;
 }
-  
+
 /* Diet chips */
-.chip-grid{
+.chip-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
 }
-  
-.chip{
+
+.chip {
     display: flex;
     gap: 8px;
     align-items: center;
@@ -843,8 +818,8 @@ body {
     font-weight: 700;
     color: #111;
 }
-  
-.chip-ic{
+
+.chip-ic {
     width: 26px;
     height: 26px;
     border-radius: 10px;
@@ -852,18 +827,18 @@ body {
     display: grid;
     place-items: center;
 }
-  
+
 /* Sticky CTA button */
-.hd-cta-wrap{
+.hd-cta-wrap {
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
     padding: 10px 12px 18px;
-    background: linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,.92), rgba(255,255,255,0));
+    background: linear-gradient(to top, rgba(255, 255, 255, 1), rgba(255, 255, 255, .92), rgba(255, 255, 255, 0));
 }
-  
-.hd-cta{
+
+.hd-cta {
     display: block;
     text-align: center;
     text-decoration: none;
@@ -873,7 +848,7 @@ body {
     border-radius: 14px;
     font-weight: 800;
     font-size: 12px;
-}  
+}
 
 /* ===== HOME PAGE ===== */
 
@@ -1134,4 +1109,97 @@ body {
 .search-empty-hint {
     font-size: 14px !important;
     color: #aaa !important;
+}
+
+/* ==== login & registration page ===== */
+
+.lr-error-message {
+    background-color: #eecccc;
+    /* margin-bottom: 1em; */
+    padding: 0.25em;
+    margin-bottom: .5em;
+    text-align: center;
+    font-size: .75em;
+    font-weight: bold;
+}
+
+.lr-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lr-card {
+    /* black, rounded border */
+    /* border: 1px solid black; */
+    /* border-radius: 8px; */
+    padding: 1rem;
+
+    margin-top: 1rem;
+    overflow: auto;
+}
+
+.lr-card * {
+    border-radius: 8px;
+    display: grid;
+}
+
+.lr-form {
+    margin: auto;
+    margin-top: 0px;
+    width: 300px;
+    display: grid;
+    grid-template-rows: auto 100px auto;
+}
+
+.lr-form lr-grid-top {
+    grid-row: 1;
+    justify-self: start;
+}
+
+.lr-form lr-grid-bottom {
+    justify-self: end;
+    grid-row-end: -1;
+}
+
+.lr-form form,
+.lr-form div,
+.lr-form label {
+    font-size: 1em;
+    padding-bottom: 0.5em;
+}
+
+.lr-form input,
+.lr-form button {
+    display: block;
+    border: 1px solid #555;
+    font-size: 1em;
+    height: fit-content;
+}
+
+.lr-form button,
+.lr-form input {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    padding: .2em;
+}
+
+.lr-form button:hover,
+.lr-form input:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.lr-form .submit-button {
+    background-color: white;
+    color: black;
+}
+
+.lr-form .alt-button {
+    background-color: black;
+    color: white;
+    margin-bottom: .5em;
+}
+
+.alt-button a {
+    text-decoration: none;
+    color: white;
 }
