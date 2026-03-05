@@ -3,7 +3,7 @@
 <!-- Page Header -->
 <div class="page-header">
     <div class="page-header-left">
-        <a href="javascript:history.back()">&#8249;</a>
+        <a href="{{ return_to or '/' }}">&#8249;</a>
         <h2>Meal Details</h2>
     </div>
     <div class="page-header-icons">
@@ -162,7 +162,9 @@
 
 <!-- Write a Review Button -->
 <div class="action-btn-container">
-    <a href="/meal/{{ food.id }}/review" class="action-btn">Write a Review</a>
+    <a href="/meal/{{ food.id }}/review{% if return_to %}?return_to={{ return_to | urlencode }}{% endif %}" class="action-btn">
+        Write a Review
+      </a>
 </div>
 
 <!-- Bottom Navigation -->

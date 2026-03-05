@@ -3,7 +3,7 @@
 <!-- Page Header -->
 <div class="page-header">
   <div class="page-header-left">
-    <a href="/meal/{{ food.id }}">&#8249;</a>
+    <a href="/meal/{{ food.id }}{% if return_to %}?return_to={{ return_to | urlencode }}{% endif %}">&#8249;</a>
     <h2>Meal Review</h2>
   </div>
   <div class="page-header-icons">
