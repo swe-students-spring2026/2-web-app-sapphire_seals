@@ -18,10 +18,29 @@
     </form>
 </div>
 
+<!-- Filter Bar (only shown when there's a search query) -->
+{% if query %}
+<div class="filter-bar">
+    <a href="/search?q={{ query }}"
+       class="filter-btn {% if not active_filter %}active{% endif %}">All</a>
+    <a href="/search?q={{ query }}&filter=Vegan"
+       class="filter-btn {% if active_filter == 'Vegan' %}active{% endif %}">Vegan</a>
+    <a href="/search?q={{ query }}&filter=Vegetarian"
+       class="filter-btn {% if active_filter == 'Vegetarian' %}active{% endif %}">Vegetarian</a>
+    <a href="/search?q={{ query }}&filter=Avoiding Gluten"
+       class="filter-btn {% if active_filter == 'Avoiding Gluten' %}active{% endif %}">Gluten-Free</a>
+    <a href="/search?q={{ query }}&filter=Good Source of Protein"
+       class="filter-btn {% if active_filter == 'Good Source of Protein' %}active{% endif %}">Protein</a>
+    <a href="/search?q={{ query }}&filter=Halal"
+       class="filter-btn {% if active_filter == 'Halal' %}active{% endif %}">Halal</a>
+</div>
+{% endif %}
+
 <!-- Search Results -->
 {% if query %}
 <p class="search-results-count">
     {{ results | length }} result{{ 's' if results | length != 1 else '' }} for "{{ query }}"
+    {% if active_filter %} filtered by "{{ active_filter }}"{% endif %}
 </p>
 {% endif %}
 
@@ -56,8 +75,8 @@
 {% elif query %}
 <div class="search-empty">
     <div class="search-empty-icon">🍽</div>
-    <p>No meals found for "{{ query }}".</p>
-    <p class="search-empty-hint">Try a different keyword.</p>
+    <p>No meals found for "{{ query }}"{% if active_filter %} with filter "{{ active_filter }}"{% endif %}.</p>
+    <p class="search-empty-hint">Try a different keyword or <a href="/search?q={{ query }}">clear filters</a>.</p>
 </div>
 {% else %}
 <div class="search-empty">
