@@ -1,74 +1,66 @@
-<!doctype html>
-<html>
-  <head>
-    <title></title>
-  </head>
+{% extends "base.html" %} {% set show_header = False %} {% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h2>RateMyCanteen</h2>
+  </div>
+  <div class="page-header-icons">
+    {% if session.get('user_id') %}
+    <a href="/logout" class="header-link" title="Logout">🚪</a> {% else %}
+    <a href="/login" class="header-link" title="Login">👤</a> {% endif %}
+  </div>
+</div>
 
-  <body>
-    {% extends "base.html" %} {% set show_header = False %} {% block content %}
-    <div class="page-header">
-      <div class="page-header-left">
-        <h2>RateMyCanteen</h2>
-      </div>
-      <div class="page-header-icons">
-        {% if session.get('user_id') %}
-        <a href="/logout" class="header-link" title="Logout">🚪</a> {% else %}
-        <a href="/login" class="header-link" title="Login">👤</a> {% endif %}
-      </div>
-    </div>
+<div class="mr-container">
+  <h2 class="mr-title">My Reviews</h2>
+  {% if ratings and ratings|length > 0 %}
+  <div class="review-list">
+    {% for r in ratings %}
 
-    <div class="mr-container">
-      <h2 class="mr-title">My Reviews</h2>
-      {% if ratings and ratings|length > 0 %}
-      <div class="review-list">
-        {% for r in ratings %}
-
-        <a class="mr-review-page-link" href="/meal/{{r.food_id}}/review">
-          <div class="review-row">
-            <div class="review-avatar" aria-hidden="true"></div>
-            <div class="review-body">
-              <div class="review-name">{{ r.food_name }}</div>
-              <div class="review-text">
-                {{ r.text[:150] }}{% if r.text | length > 150 %}...{% endif %}
-              </div>
-            </div>
-            <div
-              class="review-stars"
-              aria-label="Rating {{ r.rating }} out of 5"
-            >
-              {% for i in range(1, 6) %} {% if i <= r.rating %}
-              <span class="star is-on">★</span>
-              {% else %}
-              <span class="star">★</span>
-              {% endif %} {% endfor %}
-            </div>
+    <a class="mr-review-page-link" href="/meal/{{r.food_id}}/review">
+      <div class="review-row">
+        <div class="review-avatar" aria-hidden="true"></div>
+        <div class="review-body">
+          <div class="review-name">{{ r.food_name }}</div>
+          <div class="review-text">
+            {{ r.text[:150] }}{% if r.text | length > 150 %}...{% endif %}
           </div>
-        </a>
-
-        {% endfor %}
+        </div>
+        <div
+          class="review-stars"
+          aria-label="Rating {{ r.rating }} out of 5"
+        >
+          {% for i in range(1, 6) %} {% if i <= r.rating %}
+          <span class="star is-on">★</span>
+          {% else %}
+          <span class="star">★</span>
+          {% endif %} {% endfor %}
+        </div>
       </div>
-      {% else %}
-      <p class="mr-empty">Write some reviews!</p>
-      {% endif %}
-    </div>
+    </a>
 
-    <nav class="bottom-nav">
-      <a href="/" class="nav-item active"
-        ><span class="nav-icon">🏠</span> <span>Home</span></a
-      >
-      <a href="/search" class="nav-item"
-        ><span class="nav-icon">🔍</span> <span>Search</span></a
-      >
-      {% if session.get('user_id') %}
-      <a href="/users/my_ratings" class="nav-item"
-        ><span class="nav-icon">⭐</span> <span>My Ratings</span></a
-      >
-      {% else %}
-      <a href="/login" class="nav-item"
-        ><span class="nav-icon">👤</span> <span>Login</span></a
-      >
-      {% endif %}
-    </nav>
-    {% endblock %}
-  </body>
-</html>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="mr-empty">Write some reviews!</p>
+  {% endif %}
+</div>
+
+<nav class="bottom-nav">
+  <a href="/" class="nav-item active"
+    ><span class="nav-icon">🏠</span> <span>Home</span></a
+  >
+  <a href="/search" class="nav-item"
+    ><span class="nav-icon">🔍</span> <span>Search</span></a
+  >
+  {% if session.get('user_id') %}
+  <a href="/users/my_ratings" class="nav-item"
+    ><span class="nav-icon">⭐</span> <span>My Ratings</span></a
+  >
+  {% else %}
+  <a href="/login" class="nav-item"
+    ><span class="nav-icon">👤</span> <span>Login</span></a
+  >
+  {% endif %}
+</nav>
+{% endblock %}
+

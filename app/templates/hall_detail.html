@@ -16,10 +16,9 @@
     <div class="hd-card-text">
       <div class="hd-hall-name">{{ hall.name }}</div>
       <div class="hd-subtitle">
-        {% if hall.get('greenRestaurant') %}🌿 Green Restaurant{% endif %} {% if
-        hall.get('mobileOrderingLabel') %} • {{ hall.mobileOrderingLabel }}{%
-        endif %} {% if not hall.get('greenRestaurant') and not
-        hall.get('mobileOrderingLabel') %}NYU Dining{% endif %}
+        {% if hall.get('greenRestaurant') %}🌿 Green Restaurant{% endif %}
+        {% if hall.get('mobileOrderingLabel') %} • {{ hall.mobileOrderingLabel }}{% endif %}
+        {% if not hall.get('greenRestaurant') and not hall.get('mobileOrderingLabel') %}NYU Dining{% endif %}
       </div>
     </div>
   </section>
@@ -31,28 +30,20 @@
     {% if meals and meals | length > 0 %}
     <div class="hd-grid">
       {% for m in meals %}
-      <a
-        href="/meal/{{ m.id }}"
-        class="meal-card"
-        style="text-decoration: none; color: inherit"
-      >
+      <a href="/meal/{{ m.id }}" class="meal-card" style="text-decoration: none; color: inherit">
         <div class="meal-category">{{ m.category }}</div>
         <div class="meal-photo" aria-hidden="true">{{ m.calories }} cal</div>
         <div class="meal-desc">{{ m.name }}</div>
         <div class="meal-name">{{ m.desc }}</div>
-
-                {% if m.averageScore and m.averageScore > 0 %}
-                <div class="review-stars" style="margin-top:4px;">
-                    {% for i in range(1, 6) %}
-                    {% if i <= m.averageScore | round(0, 'floor' ) | int %} <span class="star is-on">★</span>
-                        {% else %}
-                        <span class="star">★</span>
-                        {% endif %}
-                        {% endfor %}
-                </div>
-                {% endif %}
-            </a>
-            {% endfor %}
+        {% if m.averageScore and m.averageScore > 0 %}
+        <div class="review-stars" style="margin-top:4px;">
+          {% for i in range(1, 6) %}
+            {% if i <= m.averageScore | round(0, 'floor') | int %}
+              <span class="star is-on">★</span>
+            {% else %}
+              <span class="star">★</span>
+            {% endif %}
+          {% endfor %}
         </div>
         {% endif %}
       </a>
@@ -67,32 +58,23 @@
   <section class="hd-section">
     <h2 class="hd-section-title">Reviews</h2>
 
-        {% if reviews and reviews | length > 0 %}
-        <div class="review-list">
-            {% for r in reviews[:15] %}
-            <div class="review-row">
-                <div class="review-avatar" aria-hidden="true"></div>
-                <div class="review-body">
-                    <div class="review-name">{{ r.food_name }}</div>
-                    <div class="review-text">{{ r.text[:150] }}{% if r.text | length > 150 %}...{% endif %}</div>
-                </div>
-                <div class="review-stars" aria-label="Rating {{ r.rating }} out of 5">
-                    {% for i in range(1, 6) %}
-                    {% if i <= r.rating %} <span class="star is-on">★</span>
-                        {% else %}
-                        <span class="star">★</span>
-                        {% endif %}
-                        {% endfor %}
-                </div>
-            </div>
-            {% endfor %}
+    {% if reviews and reviews | length > 0 %}
+    <div class="review-list">
+      {% for r in reviews[:15] %}
+      <div class="review-row">
+        <div class="review-avatar" aria-hidden="true"></div>
+        <div class="review-body">
+          <div class="review-name">{{ r.food_name }}</div>
+          <div class="review-text">{{ r.text[:150] }}{% if r.text | length > 150 %}...{% endif %}</div>
         </div>
         <div class="review-stars" aria-label="Rating {{ r.rating }} out of 5">
-          {% for i in range(1, 6) %} {% if i <= r.rating %}
-          <span class="star is-on">★</span>
-          {% else %}
-          <span class="star">★</span>
-          {% endif %} {% endfor %}
+          {% for i in range(1, 6) %}
+            {% if i <= r.rating %}
+              <span class="star is-on">★</span>
+            {% else %}
+              <span class="star">★</span>
+            {% endif %}
+          {% endfor %}
         </div>
       </div>
       {% endfor %}
@@ -103,7 +85,6 @@
   </section>
 
   <!-- Diet preference chips -->
-
   {% if filters | length > 0 %}
   <section class="hd-section">
     <h2 class="hd-section-title">Dietary Options</h2>

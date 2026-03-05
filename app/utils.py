@@ -25,8 +25,6 @@ def respond(status_code=200, data=None):
             mimetype="application/json",
         ), status_code
     else:
-        if True:
-            raise Exception(f"Invalid status code: {status_code}")
         return Response(
             dumps({"ok": False, "message": data}),
             mimetype="application/json",
