@@ -190,11 +190,25 @@ def meal_review_page(food_item_id, user_id):
 @foods_bp.route("/search")
 def search_page():
     query = request.args.get("q", "").strip()
+    active_filter = request.args.get("filter", "").strip()
     results = []
     if query:
-        results = list(db.foods.find({"name": {"$regex": query, "$options": "i"}}))
+        mongo_query = {"name": {"$regex": query, "$options": "i"}}
+        if active_filter:
+            mongo_query["filters.id"] = active_filter
+        results = list(db.foods.find(mongo_query))
+
+    # Build a list of dietary filters for the filter bar
+    filter_options = list(db.tags.find({"icon": True}))
+
     return render_template(
-        "search.html", title="Search", query=query, results=results, show_header=False
+        "search.html",
+        title="Search",
+        query=query,
+        results=results,
+        active_filter=active_filter,
+        filter_options=filter_options,
+        show_header=False,
     )
 
 
