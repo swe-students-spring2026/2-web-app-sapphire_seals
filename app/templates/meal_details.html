@@ -163,7 +163,7 @@
 <!-- Write a Review Button -->
 <div class="action-btn-container">
     <a href="/meal/{{ food.id }}/review{% if return_to %}?return_to={{ return_to | urlencode }}{% endif %}" class="action-btn">
-        Write a Review
+        {{ "Edit Your Review" if has_review else "Write a Review" }}
       </a>
 </div>
 

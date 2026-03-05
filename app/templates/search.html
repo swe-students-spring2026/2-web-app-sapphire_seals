@@ -67,6 +67,7 @@
             {% if food.get('calories') %}
             <div class="search-result-meta">{{ food.calories }} cal</div>
             {% endif %}
+            <div class="search-result-meta">{{ food.get('hallName', '') }}{% if food.get('hallName') and food.get('category') %} - {% endif %}{{ food.get('category', '') }}</div>
         </div>
         <div class="search-result-arrow">&#8250;</div>
     </a>

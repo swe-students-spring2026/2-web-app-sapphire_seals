@@ -28,6 +28,10 @@ def home():
 @app.route("/halls")
 def halls_list():
     halls = list(db.halls.find())
+    for hall in halls:
+        foods = list(db.foods.find({"foodEdges.0": hall["id"], "averageScore": {"$gt": 0}}))
+        if foods:
+            hall["avg_rating"] = sum(f["averageScore"] for f in foods) / len(foods)
     return render_template(
         "halls.html", title="Dining Halls", halls=halls, show_header=False
     )

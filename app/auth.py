@@ -25,7 +25,7 @@ def login():
         session["user_id"] = str(user["_id"])
         session["username"] = user["username"]
         
-        return redirect(url_for('home')) # TODO: Redirect to home page
+        return redirect(url_for('home'))
     
     return render_template("login.html", title="Login", show_header=False)
 
@@ -65,7 +65,7 @@ def register():
         session["user_id"] = str(result.inserted_id)
         session["username"] = username
         
-        return redirect(url_for('home')) # TODO: Redirect to home page
+        return redirect(url_for('home'))
 
     return render_template("register.html", title="Register", show_header=False)
 

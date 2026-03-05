@@ -74,6 +74,11 @@ def meal_detail_page(food_item_id):
     message = request.args.get("message", None)
     return_to = request.args.get("return_to")
 
+    user_id = session.get("user_id")
+    has_review = any(
+        r.get("user_id") == user_id for r in food.get("ratings", [])
+    ) if user_id else False
+
     return render_template(
         "meal_details.html",
         title="Meal Details",
@@ -81,6 +86,7 @@ def meal_detail_page(food_item_id):
         avg_score=avg_score,
         message=message,
         return_to=return_to,
+        has_review=has_review,
         show_header=False,
     )
 
@@ -110,7 +116,7 @@ def meal_review_page(food_item_id, user_id):
     if food is None:
         return meal_review_template(message="Food item not found!")
 
-    review = {"score": 0, "content": "content"}
+    review = {"score": 0, "content": ""}
 
     for r in food.get("ratings", {}):
         if r.get("user_id", "") == user_id:
@@ -212,6 +218,17 @@ def search_page():
         if active_filter:
             mongo_query["filters.name"] = active_filter
         results = list(db.foods.find(mongo_query))
+        hall_ids = {r["foodEdges"][0] for r in results if r.get("foodEdges")}
+        hall_map = {
+            h["id"]: h["name"]
+            for h in db.halls.find({"id": {"$in": list(hall_ids)}})
+        }
+        for r in results:
+            r["hallName"] = (
+                hall_map.get(r["foodEdges"][0], "Unknown")
+                if r.get("foodEdges")
+                else "Unknown"
+            )
 
     # Build a list of dietary filters for the filter bar
     filter_options = list(db.tags.find({"icon": True}))
