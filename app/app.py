@@ -20,13 +20,10 @@ app.register_blueprint(foods_bp)
 app.register_blueprint(api_bp)
 
 #### Pages ####
-
-
 @app.route("/home")
 def home():
     halls = list(db.halls.find())
     return render_template("home.html", title="Home", halls=halls, show_header=False)
-
 
 @app.route("/halls")
 def halls_list():
@@ -34,7 +31,6 @@ def halls_list():
     return render_template(
         "halls.html", title="Dining Halls", halls=halls, show_header=False
     )
-
 
 @app.route("/halls")
 def halls():

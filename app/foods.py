@@ -210,7 +210,7 @@ def search_page():
     if query:
         mongo_query = {"name": {"$regex": query, "$options": "i"}}
         if active_filter:
-            mongo_query["filters.id"] = active_filter
+            mongo_query["filters.name"] = active_filter
         results = list(db.foods.find(mongo_query))
 
     # Build a list of dietary filters for the filter bar
