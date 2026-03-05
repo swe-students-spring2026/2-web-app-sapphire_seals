@@ -6,7 +6,7 @@ from db import db, client
 from bson.objectid import ObjectId
 from utils import require_auth  # Authentication helper
 from utils import respond  # Response helper
-
+from urllib.parse import quote
 import datetime
 
 
@@ -72,6 +72,7 @@ def meal_detail_page(food_item_id):
 
     avg_score = food.get("averageScore", 0)
     message = request.args.get("message", None)
+    return_to = request.args.get("return_to")
 
     return render_template(
         "meal_details.html",
@@ -79,6 +80,7 @@ def meal_detail_page(food_item_id):
         food=food,
         avg_score=avg_score,
         message=message,
+        return_to=return_to,
         show_header=False,
     )
 
@@ -86,6 +88,12 @@ def meal_detail_page(food_item_id):
 @foods_bp.route("/meal/<food_item_id>/review", methods=["GET", "POST", "DELETE"])
 @require_auth
 def meal_review_page(food_item_id, user_id):
+    food = db.foods.find_one({"id": food_item_id})
+    if food is None:
+        return "Food item not found!", 404
+    
+    return_to = request.args.get("return_to") 
+
     def meal_review_template(message=None, review={}):
         return render_template(
             "meal_review.html",
@@ -95,6 +103,7 @@ def meal_review_page(food_item_id, user_id):
             show_header=False,
             content=review.get("content", ""),
             score=review.get("score", 0),
+            return_to=return_to,   
         )
 
     food = db.foods.find_one({"id": food_item_id})
@@ -120,7 +129,10 @@ def meal_review_page(food_item_id, user_id):
         )
         if result.modified_count == 0:
             return meal_review_template(message="You haven't rated this food item yet!")
-        return redirect(f"/meal/{food_item_id}?message=Review+deleted+successfully!")
+        url = f"/meal/{food_item_id}?message=Review+deleted+successfully!"
+        if return_to:
+            url += f"&return_to={quote(return_to, safe='')}"
+        return redirect(url)
 
     # POST — process the review
     score_raw = request.form.get("score")
@@ -184,7 +196,10 @@ def meal_review_page(food_item_id, user_id):
         avg = 0
     db.foods.update_one({"id": food_item_id}, {"$set": {"averageScore": avg}})
 
-    return redirect(f"/meal/{food_item_id}?message=Review+submitted+successfully!")
+    url = f"/meal/{food_item_id}?message=Review+submitted+successfully!"
+    if return_to:
+        url += f"&return_to={quote(return_to, safe='')}"
+    return redirect(url)
 
 
 @foods_bp.route("/search")

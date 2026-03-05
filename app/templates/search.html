@@ -28,7 +28,7 @@
 {% if results %}
 <div class="search-results-list">
     {% for food in results %}
-    <a href="/meal/{{ food.id }}" class="search-result-card">
+    <a href="/meal/{{ food.id }}?return_to={{ request.full_path | urlencode }}" class="search-result-card">
         <div class="food-avatar"></div>
         <div class="search-result-info">
             <div class="search-result-name">{{ food.name }}</div>
